@@ -35,4 +35,6 @@
   * SSE with Amazon managed keys (SSE-S3)
   * SSE with KMS-managed keys (SSE-KMS)
   * SSE with customer privoded keys (SSE-C)
-
+* Storage classes
+  ![s3-storage-classes](/images/s3-storage-classes.png?raw=true "types of S3 Strage classes")
+* versioning(file with same name), lifecycle( days to move lower classes or glacier). access log. event integrate with sns/sqs/lambda. cross region replication. 
