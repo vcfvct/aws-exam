@@ -39,5 +39,9 @@
   ![s3-storage-classes](/images/s3-storage-classes.png?raw=true "types of S3 Strage classes")
 * versioning(file with same name), lifecycle( days to move lower classes or glacier). access log. event integrate with sns/sqs/lambda. cross region replication. 
 
-## RDS
+## EBS
+* snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
+* HDD[thrput optimized(ETL etc...) or cold], SSD, Magnetic volumns 
+
+## Dynamo
 
