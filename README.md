@@ -43,5 +43,27 @@
 * snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
 * HDD[thrput optimized(ETL etc...) or cold], SSD, Magnetic volumns 
 
-## Dynamo
+## SQS
+* default visibility timeout 30s. Max 12 hours.  
+* msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s.  
+* message order not guarateed.  
+* 
 
+## SNS
+* Fully Managed Push message service. (email/sms/email)  
+* A request can be up to 256kb(xml/json/unfomratted). 
+* 
+
+## SWF(simple workflow service)
+* A full managed State Tracker and Task Coordinator. Components: Taks, Marker, Timer, Singal. 
+
+## CloudTrail
+* A web service that records API calls made on your accound and delivers log files to your amazon s3 bucket 
+* An event has info about: Logs, the identity of the caller, the time of te call, the source IP, the request params, the response elements returned by the AWS service
+* delivers an event within 15 mins of the API call. logs file every 5 mins. 
+
+## Ops works
+* A configuration management service that enables you and operate applications of all shapes and sizes using **Chef**.
+* create up to 40 stacks, each stack can hold up to 40 layers, 40 instances and 40 apps. 
+
+##
