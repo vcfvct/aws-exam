@@ -26,10 +26,11 @@
 ## S3
 * multi-regions.  objects are copied within region across different AZs. Bucketname cannot be changed. 
 * object-size: **0-5TB**. single upload put limit: **5GB**.
+* maximun number of S3 buckets per aws account: **100**.
 * Access control
-  * IAM policy -> user
-  * ACL(Access control list) -> add permissions on indicidual objects. 
-  * bucket policy -> add/deny permissions across some or all objects within a single bucket
+  * IAM policy -> user/role
+  * ACL(Access control list) which is legacy -> add permissions on indicidual objects. 
+  * bucket policy -> add/deny permissions across some or all objects within a single bucket. (higher priority to user/role policy). 
   * query string auth -> share objects via URLs that are valid for a specified period of time. 
 * encrypt content
   * SSE with Amazon managed keys (SSE-S3)
@@ -38,6 +39,27 @@
 * Storage classes
   ![s3-storage-classes](/images/s3-storage-classes.png?raw=true "types of S3 Strage classes")
 * versioning(file with same name), lifecycle( days to move lower classes or glacier). access log. event integrate with sns/sqs/lambda. cross region replication. 
+* to make files available to CDN, we could make the bucket files public by setting bucket policy:
+```
+{
+  "Id": "Policy1380877762691",
+  "Statement": [
+    {
+      "Sid": "Stmt1380877761162",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::<bucket-name>/*",
+      "Principal": {
+        "AWS": [
+          "*"
+        ]
+      }
+    }
+  ]
+}
+```
 
 ## EBS
 * snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
@@ -66,4 +88,9 @@
 * A configuration management service that enables you and operate applications of all shapes and sizes using **Chef**.
 * create up to 40 stacks, each stack can hold up to 40 layers, 40 instances and 40 apps. 
 
-##
+## EC2
+* By default, you can only have **5** Elastic IP addresses per region.
+* You are billed instance-hours as long as your EC2 instance is in a running state.
+* The Elastic IP is a static public IP address that is associated with you Amazon account. When you have an Elastic IP address, you can seamlessly disassociate the IP address from an Instance and re-associate it to another instance. When this occurs, the name of the new instance is automatically mapped in DNS. With a standard static public IP address, there is no seamless transition, this process must be done by the user which creates service downtime. 
+* ec3 metadata url: http://169.254.169.254/latest/meta-data/
+* we can use IAM roles for temporary credentials in ec2 which has a hidden process to retrieve temp credential automatically. In [java](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-roles.html), we can use `InstanceProfileCredentialsProvider` to create client without having to get credential from sts manually. With `aws cli`, it should work out of box. some more explanation [here](http://parthicloud.com/how-to-access-s3-bucket-from-application-on-amazon-ec2-without-access-credentials/). To access the temp credentail via command line, run: `curl http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name_goes_here` according to this [post](https://derflounder.wordpress.com/2017/04/27/using-iam-roles-on-amazon-web-services-to-generate-temporary-credentials-for-ec2-instances/), which also provided the piped sed/awk command to extract the accessid/secrte.   
