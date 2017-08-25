@@ -101,3 +101,10 @@
 * encryption cannot be applied to the running instances. 
 * multi-AZ, auto failover to the standby without change connection string etc. for **Disaster only**. 
 * read-replica, for read performance/scaling, up to 5 instances and must have the auto-backup turned on. using `async` replication. Same AZ.  
+
+## dynamo
+* eventual vs read consistency. 
+* 1 write per second is one uint. good price for read, and not for write. $0.0065 per 10 write/50 read.  
+* easy to scale(push button) comparing to RDS relational. 
+## Route 53
+* difference with cname, alias record can map naked domain name(`example.com`), but cname cannot(it can only map to like www.example.com, server1.example.com). and cname get charged but alias does not. 
