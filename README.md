@@ -123,3 +123,12 @@
 
 ## VPC
 * good explanation of [difference between public and private subnet](https://stackoverflow.com/a/22212017/1486742). Basically public subnet use `Internet Gateway` as default route and private subnet uses `NAT` as route. So the instance in public subnet with public IP will have internet acess since the route will use that IP directly. Inbound wise, with public IP, it could also be accessed if SG/ACL allows. For instance in private subnet, instance-initiated outbound internet access is possbile via NAT. However, ourside-world-init inbound access cannot be done since there is no public IP associate to the private subnet instance.
+* To create a public subnet: 
+  * create a internet gateway and attached to the custom vpc(one IGW for 1 vpc)
+  * create a new route table so that we do not change the default `main` route table. add the ip range(0.0.0.0/0) below the `local` and use the IGW(internet gateway) as target. This means all desitination other than our local subnet ip addresses will go to internet via IGW. We do not use main otherwise all subnet will have internet access. 
+  * associate subnet to the route tabel we just created in the `Subnet Association` tab in this route table. 
+  * for public subnet, we can turn on auto assign public ip  in the `subnet actions` . 
+* for NAT instance, we can create a NAT ec2 instance in the public subnet. then in `actions -> networking -> change source/dest check`, disable it so that it would act as the middle man rather than a source/dest. In the `main` route table, add `0.0.0.0/0` below the local and add the target as the the NAT Ec2 instance, which means all subnet other than public will use this NAT to access internet.   
+* for NAT Gateway(more preferable, no ec2 maintanence comparing to NAT instance which is a single point of failure). On creation, selection public subnet where this NAT gateway will be deployed to. And then create a Elastic IP. Then in the route table, do the same thing as in the NAT instance.  
+* ACL vs SG, ACL is on the subnet level, support allow and deny rule, stateless that return traffic must be explicitly allowd, rules are tested sequetially(smaller first/higher priority).   where as SG is on instance level, support allow rule only, stateful that return traffic is automatically allowed regardless of any rule.  
+* one subnet can only associate with one network ACL. We need to add [Ephemeral port](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html#VPC_ACLs_Ephemeral_Ports) to the allow list if client init traffic. 
