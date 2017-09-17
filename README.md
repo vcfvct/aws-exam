@@ -27,6 +27,7 @@
 * multi-regions.  objects are copied within region across different AZs. Bucketname cannot be changed. 
 * object-size: **0-5TB**. single upload put limit: **5GB**.
 * maximun number of S3 buckets per aws account: **100**.
+* Amazon S3 bucket names are globally unique, regardless of the AWS Region in which you create the bucket.
 * Access control
   * IAM policy -> user/role
   * ACL(Access control list) which is legacy -> add permissions on indicidual objects. 
@@ -38,6 +39,8 @@
   * SSE with customer privoded keys (SSE-C)
 * Storage classes
   ![s3-storage-classes](/images/s3-storage-classes.png?raw=true "types of S3 Strage classes")
+  * `Infrequent Access` (Standard - IA) is an Amazon S3 storage class for data that is accessed less frequently, but requires rapid access when needed. Standard - IA offers the high durability, throughput, and low latency of Amazon S3 Standard, with a low per GB storage price and per GB retrieval fee. This combination of low cost and high performance make Standard - IA ideal for long-term storage, backups, and as a data store for disaster recovery.
+  * `Reduced Redundancy Storage`: an Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage. It provides a highly available solution for distributing or sharing content that is durably stored elsewhere, or for storing thumbnails, transcoded media, or other processed data that can be easily reproduced. 
 * versioning(file with same name), lifecycle( days to move lower classes or glacier). access log. event integrate with sns/sqs/lambda. cross region replication. 
 * to make files available to CDN, we could make the bucket files public by setting bucket policy:
 ```
@@ -60,10 +63,17 @@
   ]
 }
 ```
+* URL pattern can be v-host style or path style
+  * virtual host style: http://bucket.s3.amazonaws.com OR http://bucket.s3-aws-region.amazonaws.com
+  * path style: `US East (N. Virginia) region endpoint`, http://s3.amazonaws.com/*bucketName*.  `other Region-specific endpoint`, http://s3-*aws-region*.amazonaws.com/*bucketName*
 
 ## EBS
 * snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
 * HDD[thrput optimized(ETL etc...) or cold], SSD, Magnetic volumns 
+
+## AWS storage gateway
+* a hybrid storage service that enables your on-premises applications to seamlessly use AWS cloud storage.
+* It could run on premise as a  virtual appliance that can be used to cache S3 locally at a customers site.
 
 ## SQS
 * default visibility timeout 30s. Max 12 hours.  
