@@ -145,3 +145,6 @@
 * ACL vs SG, ACL is on the subnet level, support allow and deny rule, stateless that return traffic must be explicitly allowd, rules are tested sequetially(smaller first/higher priority).   where as SG is on instance level, support allow rule only, stateful that return traffic is automatically allowed regardless of any rule.  
 * one subnet can only associate with one network ACL. We need to add [Ephemeral port](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html#VPC_ACLs_Ephemeral_Ports) to the allow list if client init traffic. 
 * vpc log flow allow log all traffic to the vpc into the cloudwatch. 
+
+## IAM
+* [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html). it assumes deny first, and then  evaluates deny then evaluate allow. 
