@@ -33,7 +33,7 @@
   * ACL(Access control list) which is legacy -> add permissions on indicidual objects. 
   * bucket policy -> add/deny permissions across some or all objects within a single bucket. (higher priority to user/role policy). 
   * query string auth -> share objects via URLs that are valid for a specified period of time. 
-* encrypt content
+* [encrypt content](https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/). The below values are passed via http header when `put`. 
   * SSE with Amazon managed keys (SSE-S3)
   * SSE with KMS-managed keys (SSE-KMS)
   * SSE with customer privoded keys (SSE-C)
