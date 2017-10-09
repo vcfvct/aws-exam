@@ -40,7 +40,7 @@
 * Storage classes
   ![s3-storage-classes](/images/s3-storage-classes.png?raw=true "types of S3 Strage classes")
   * `Infrequent Access` (Standard - IA) is an Amazon S3 storage class for data that is accessed less frequently, but requires rapid access when needed. Standard - IA offers the high durability, throughput, and low latency of Amazon S3 Standard, with a low per GB storage price and per GB retrieval fee. This combination of low cost and high performance make Standard - IA ideal for long-term storage, backups, and as a data store for disaster recovery.
-  * `Reduced Redundancy Storage`: an Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage. It provides a highly available solution for distributing or sharing content that is durably stored elsewhere, or for storing thumbnails, transcoded media, or other processed data that can be easily reproduced. 
+  * `Reduced Redundancy Storage`: [deprecated according to here](https://mysteriouscode.io/blog/aws-s3-storage-classes-pricing-is-not-what-you-think/). an Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage. It provides a highly available solution for distributing or sharing content that is durably stored elsewhere, or for storing thumbnails, transcoded media, or other processed data that can be easily reproduced. 
 * versioning(file with same name), lifecycle( days to move lower classes or glacier). access log. event integrate with sns/sqs/lambda. cross region replication. 
 * to make files available to CDN, we could make the bucket files public by setting bucket policy:
 ```
