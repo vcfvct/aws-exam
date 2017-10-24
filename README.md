@@ -6,6 +6,8 @@
 ## ECS(EC2 Container Service)
 * clusters can only scale in a single region.
 * Instances within ECS cluster have Docker daemon and ECS agent so that the ECS command can be translated to Docker commands. 
+* ECS `task definitioin`(json format) is like ASG for ec2 defining variables for the cluster. The cluster uses IAM role to access required resources.
+* max 10 tasks per instance(host). max 10 containers per taks definition. One LB per service.  
 
 ## Elastic BeanStalk
 * A service to help you deploy web application
@@ -116,9 +118,10 @@
 	* auto scale from 10G to 64TB. 2 copies in each AZ and minium in 3 az, so 6 copies. 
 	 
 ## dynamo
-* eventual vs read consistency. 
+* eventual vs read consistency(auto copy to 3 AZs). 
 * 1 write per second is one uint. good price for read, and not for write. $0.0065 per 10 write/50 read.  
 * easy to scale(push button) comparing to RDS relational. 
+* major limitations: 1. 400KB max item size. 2. 10 indexes per table
 
 ## redshift
 * single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
