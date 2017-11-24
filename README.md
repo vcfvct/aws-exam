@@ -68,6 +68,7 @@
 * URL pattern can be v-host style or path style
   * virtual host style: http://bucket.s3.amazonaws.com OR http://bucket.s3-aws-region.amazonaws.com
   * path style: `US East (N. Virginia) region endpoint`, http://s3.amazonaws.com/*bucketName*.  `other Region-specific endpoint`, http://s3-*aws-region*.amazonaws.com/*bucketName*
+* s3 has `read-after-write` consistency for `PUT` of new object, and `eventual` consistency for `PUT` on existing object and `Delete` http request.
 
 ## EBS
 * snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
@@ -126,6 +127,7 @@
 ## redshift
 * single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
 * column based. advanced compresion. only avail in 1 AZ
+* default block size for columnar storage is 1M, which is more efficient and further reduces the number of I/O requests needed to perform any database loading or other operations that are part of query execution.
 
 ## elasticache
 * improve latency and thruput of read heavy.
