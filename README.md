@@ -73,6 +73,7 @@
 ## EBS
 * snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
 * HDD[thrput optimized(ETL etc...) or cold], SSD, Magnetic volumns 
+* max volumn **16TB**
 
 ## AWS storage gateway
 * a hybrid storage service that enables your on-premises applications to seamlessly use AWS cloud storage.
