@@ -88,6 +88,7 @@
 * msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s.  
 * message order not guarateed.  
 * When the message visibility timeout expires, the message becomes available for processing by other EC2 instances 
+* most of time,  short poll is not ideal since it does not query all the servers. long polling default timeout: `20s`.  
 
 ## SNS
 * Fully Managed Push message service. (email/sms/email)  
@@ -166,8 +167,12 @@
 * you can write file directly to edge
 * object expires in 24hr by default and minium is 3600s(one hour). you can change the CloudFront settings for Minimum TTL, Maximum TTL, and Default TTL for a cache behavior. 
 * invalidate has 3000 object per distribution one time.  
+* Create an Origin Access Identity (OAI) for CloudFront and grant access to the objects in your S3 bucket to that OAI and create signed url using java/perl etc... 
 
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
 * AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots
-* 
+* large file transfer: snowball or aws-import/export 
+* storage gateway.
+  * gateway cached: storing all the data on s3 and cache frequently-used data locally.
+  * gateway stored: use s3 to backup the data but store locally.
