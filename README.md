@@ -37,8 +37,8 @@
   * query string auth -> share objects via URLs that are valid for a specified period of time. 
 * [encrypt content](https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/). The below values are passed via http header when `put`. 
   * SSE with Amazon managed keys (SSE-S3)
-  * SSE with KMS-managed keys (SSE-KMS)
-  * SSE with customer privoded keys (SSE-C)
+  * SSE with KMS-managed keys, customer maintains a master key rather than encryption key. (SSE-KMS)
+  * SSE with customer privoded keys. you provide the encryption keys to Amazon, and they encrypt all data with your public key so that ONLY you can only read the data with your private key. This means nobody at Amazon can ever read your files, but you are totally screwed if you lose or damage your key; Amazon cannot help you recover.  (SSE-C)
 * Storage classes
   ![s3-storage-classes](/images/s3-storage-classes.png?raw=true "types of S3 Strage classes")
   * `Infrequent Access` (Standard - IA) is an Amazon S3 storage class for data that is accessed less frequently, but requires rapid access when needed. Standard - IA offers the high durability, throughput, and low latency of Amazon S3 Standard, with a low per GB storage price and per GB retrieval fee. This combination of low cost and high performance make Standard - IA ideal for long-term storage, backups, and as a data store for disaster recovery.
@@ -69,11 +69,15 @@
   * virtual host style: http://bucket.s3.amazonaws.com OR http://bucket.s3-aws-region.amazonaws.com
   * path style: `US East (N. Virginia) region endpoint`, http://s3.amazonaws.com/*bucketName*.  `other Region-specific endpoint`, http://s3-*aws-region*.amazonaws.com/*bucketName*
 * s3 has `read-after-write` consistency for `PUT` of new object, and `eventual` consistency for `PUT` on existing object and `Delete` http request.
+* mimimun object size for S3-IA is 128KB. 
+* add `x-amz-website-redirect-location` for website/webpage redirect. 
+* in a versioned bucket, Only the **bucket owner** can delete a specified object version.
 
 ## EBS
 * snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
 * HDD[thrput optimized(ETL etc...) or cold], SSD, Magnetic volumns 
 * max volumn **16TB**
+* Data stored on EBS volumes is automatically and redundantly stored in multiple physical volumes in the same availability zone as part of the normal operations of the EBS service at no additional charge.
 
 ## AWS storage gateway
 * a hybrid storage service that enables your on-premises applications to seamlessly use AWS cloud storage.
@@ -83,7 +87,7 @@
 * default visibility timeout 30s. Max 12 hours.  
 * msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s.  
 * message order not guarateed.  
-* 
+* When the message visibility timeout expires, the message becomes available for processing by other EC2 instances 
 
 ## SNS
 * Fully Managed Push message service. (email/sms/email)  
@@ -108,6 +112,7 @@
 * The Elastic IP is a static public IP address that is associated with you Amazon account. When you have an Elastic IP address, you can seamlessly disassociate the IP address from an Instance and re-associate it to another instance. When this occurs, the name of the new instance is automatically mapped in DNS. With a standard static public IP address, there is no seamless transition, this process must be done by the user which creates service downtime. 
 * ec3 metadata url: http://169.254.169.254/latest/meta-data/
 * we can use IAM roles for temporary credentials in ec2 which has a hidden process to retrieve temp credential automatically. In [java](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-roles.html), we can use `InstanceProfileCredentialsProvider` to create client without having to get credential from sts manually. With `aws cli`, it should work out of box. some more explanation [here](http://parthicloud.com/how-to-access-s3-bucket-from-application-on-amazon-ec2-without-access-credentials/). To access the temp credentail via command line, run: `curl http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name_goes_here` according to this [post](https://derflounder.wordpress.com/2017/04/27/using-iam-roles-on-amazon-web-services-to-generate-temporary-credentials-for-ec2-instances/), which also provided the piped sed/awk command to extract the accessid/secrte.   
+* Uptime SLA for EC2/EBS is 99.95% 
 
 ## RDS
 * auto backup, stored in S3. might be slightly deley/latency during backup. 
@@ -115,10 +120,11 @@
 * encryption cannot be applied to the running instances. 
 * multi-AZ, auto failover to the standby without change connection string etc. for **Disaster only**. 
 * read-replica, for read performance/scaling, up to 5 instances and must have the auto-backup turned on. using `async` replication. Same AZ.  
-	* Aurora
-	* mysql compatible relational database. 
-	* auto scale from 10G to 64TB. 2 copies in each AZ and minium in 3 az, so 6 copies. 
-	 
+* Aurora
+  * mysql compatible relational database. 
+  * auto scale from 10G to 64TB. 2 copies in each AZ and minium in 3 az, so 6 copies. 
+* backup retention period, 1(default) to 35 days. 	 
+
 ## dynamo
 * eventual vs read consistency(auto copy to 3 AZs). 
 * 1 write per second is one uint. good price for read, and not for write. $0.0065 per 10 write/50 read.  
@@ -155,3 +161,13 @@
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). it assumes deny first, and then  evaluates deny then evaluate allow. 
 * The distinction between a request being denied by default and an explicit deny in a policy is important. By default, a request is denied, but this can be overridden by an allow. In contrast, if a policy explicitly denies a request, that deny can't be overridden. [good example](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#AccessPolicyLanguage_Interplay)
+
+## Cloudfront
+* you can write file directly to edge
+* object expires in 24hr by default and minium is 3600s(one hour). you can change the CloudFront settings for Minimum TTL, Maximum TTL, and Default TTL for a cache behavior. 
+* invalidate has 3000 object per distribution one time.  
+
+## Misc
+* AWS support 2 `Virtualizations`: para and Hardware 
+* AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots
+* 
