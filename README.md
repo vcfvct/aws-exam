@@ -88,7 +88,7 @@
 * default visibility timeout 30s. Max 12 hours.  
 * msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s.  
 * message order not guarateed.  
-* When the message visibility timeout expires, the message becomes available for processing by other EC2 instances. the maximum `VisibilityTimeout` of a message is 12 hours.
+* When the message visibility timeout expires, the message becomes available for processing by other EC2 instances. the maximum `VisibilityTimeout` of a message is 12 hours and default is 30s.
 * most of time,  short poll is not ideal since it does not query all the servers. long polling default timeout: `20s`.  
 
 ## SNS
@@ -133,6 +133,7 @@
 * 1 write per second is one uint. good price for read, and not for write. $0.0065 per 10 write/50 read.  
 * easy to scale(push button) comparing to RDS relational. 
 * major limitations: 1. 400KB max item size. 2. 10 indexes per table
+* The maximum item size in DynamoDB is 400 KB, which includes both attribute name binary length (UTF-8 length) and attribute value lengths (again binary length). The attribute name counts towards the size limit.
 
 ## redshift
 * single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
