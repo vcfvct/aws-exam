@@ -68,6 +68,7 @@
 * URL pattern can be v-host style or path style
   * virtual host style: http://bucket.s3.amazonaws.com OR http://bucket.s3-aws-region.amazonaws.com
   * path style: `US East (N. Virginia) region endpoint`, http://s3.amazonaws.com/*bucketName*.  `other Region-specific endpoint`, http://s3-*aws-region*.amazonaws.com/*bucketName*
+  * for website, it will be http(s)://*bucketName*.s3-website-*aws-region*.amazonaws.com/
 * s3 has `read-after-write` consistency for `PUT` of new object, and `eventual` consistency for `PUT` on existing object and `Delete` http request.
 * mimimun object size for S3-IA is 128KB. 
 * add `x-amz-website-redirect-location` for website/webpage redirect. 
@@ -87,7 +88,7 @@
 * default visibility timeout 30s. Max 12 hours.  
 * msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s.  
 * message order not guarateed.  
-* When the message visibility timeout expires, the message becomes available for processing by other EC2 instances 
+* When the message visibility timeout expires, the message becomes available for processing by other EC2 instances. the maximum `VisibilityTimeout` of a message is 12 hours.
 * most of time,  short poll is not ideal since it does not query all the servers. long polling default timeout: `20s`.  
 
 ## SNS
@@ -114,6 +115,7 @@
 * ec3 metadata url: http://169.254.169.254/latest/meta-data/
 * we can use IAM roles for temporary credentials in ec2 which has a hidden process to retrieve temp credential automatically. In [java](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-roles.html), we can use `InstanceProfileCredentialsProvider` to create client without having to get credential from sts manually. With `aws cli`, it should work out of box. some more explanation [here](http://parthicloud.com/how-to-access-s3-bucket-from-application-on-amazon-ec2-without-access-credentials/). To access the temp credentail via command line, run: `curl http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name_goes_here` according to this [post](https://derflounder.wordpress.com/2017/04/27/using-iam-roles-on-amazon-web-services-to-generate-temporary-credentials-for-ec2-instances/), which also provided the piped sed/awk command to extract the accessid/secrte.   
 * Uptime SLA for EC2/EBS is 99.95% 
+* The ELB  `X-Forwarded-For` request header helps you identify the IP address of a client when you use HTTP/HTTPS load balancer.
 
 ## RDS
 * auto backup, stored in S3. might be slightly deley/latency during backup. 
@@ -143,6 +145,7 @@
 
 ## Route 53
 * difference with cname, alias record can map naked domain name(`example.com`), but cname cannot(it can only map to like www.example.com, server1.example.com). and cname get charged but alias does not. 
+* In addition to hosting domains, Route 53 serves as a domain registrar
 
 ## VPC
 * A VPC spans all the Availability Zones in the region. After creating a VPC, you can add one or more subnets in each Availability Zone. When you create a subnet, you specify the CIDR block for the subnet, which is a subset of the VPC CIDR block. **Each subnet must reside entirely within one Availability Zone and cannot span zones**. Availability Zones are distinct locations that are engineered to be isolated from failures in other Availability Zones. By launching instances in separate Availability Zones, you can protect your applications from the failure of a single location. We assign a unique ID to each subnet. 
@@ -158,6 +161,8 @@
 * ACL vs SG, ACL is on the subnet level, support allow and deny rule, stateless that return traffic must be explicitly allowd, rules are tested sequetially(smaller first/higher priority).   where as SG is on instance level, support allow rule only, stateful that return traffic is automatically allowed regardless of any rule.  
 * one subnet can only associate with one network ACL. We need to add [Ephemeral port](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html#VPC_ACLs_Ephemeral_Ports) to the allow list if client init traffic. 
 * vpc log flow allow log all traffic to the vpc into the cloudwatch. 
+* vpc peering does not support *edge-to-edge* routing. so settings on vpc-a cannot be shared by vpc-b even they are peered. 
+* vpn connection between on-prem and vpc requires Hardware VPN Acess, on-prem Customer Gateway and a Virtual Private Gateway. 
 
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). it assumes deny first, and then  evaluates deny then evaluate allow. 
