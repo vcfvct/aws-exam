@@ -183,3 +183,5 @@
 * storage gateway.
   * gateway cached: storing all the data on s3 and cache frequently-used data locally.
   * gateway stored: use s3 to backup the data but store locally.
+* cloudwatch file can store logs upto 15 month. 
+* killing feature for EFS agains EBS is its concurrency, it can be mounted/accessed by multiple ec2 instances at the same time. 
