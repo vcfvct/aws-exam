@@ -79,6 +79,7 @@
 * HDD[thrput optimized(ETL etc...) or cold], SSD, Magnetic volumns 
 * max volumn **16TB**
 * Data stored on EBS volumes is automatically and redundantly stored in multiple physical volumes in the same availability zone as part of the normal operations of the EBS service at no additional charge.
+* provisioned IOPS must be at least 10G. 
 
 ## AWS storage gateway
 * a hybrid storage service that enables your on-premises applications to seamlessly use AWS cloud storage.
