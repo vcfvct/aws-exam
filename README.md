@@ -73,6 +73,7 @@
 * mimimun object size for S3-IA is 128KB. 
 * add `x-amz-website-redirect-location` for website/webpage redirect. 
 * in a versioned bucket, Only the **bucket owner** can delete a specified object version.
+* `S3 Transfer Acceleration` is especially useful in cases where your bucket resides in a Region other than the one in which the file transfer was originated.
 
 ## EBS
 * snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
@@ -137,6 +138,7 @@
 * easy to scale(push button) comparing to RDS relational. 
 * major limitations: 1. 400KB max item size. 2. 10 indexes per table
 * The maximum item size in DynamoDB is 400 KB, which includes both attribute name binary length (UTF-8 length) and attribute value lengths (again binary length). The attribute name counts towards the size limit.
+* length of a **partition key** value: 1- 2048 byte
 
 ## redshift
 * single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
@@ -177,6 +179,12 @@
 * object expires in 24hr by default and minium is 3600s(one hour). you can change the CloudFront settings for Minimum TTL, Maximum TTL, and Default TTL for a cache behavior. 
 * invalidate has 3000 object per distribution one time.  
 * Create an Origin Access Identity (OAI) for CloudFront and grant access to the objects in your S3 bucket to that OAI and create signed url using java/perl etc... 
+
+## Cloudformation
+* The **required** `Resources` section declares the AWS resources that you want to include in the stack, such as an Amazon EC2 instance or an Amazon S3 bucket.
+* The optional `Conditions` section includes statements that define when a resource is created or when a property is defined. For example, you can compare whether a value is equal to another value. Based on the result of that condition, you can conditionally create resources.
+* Use the optional `Parameters` section to customize your templates. Parameters enable you to input custom values to your template each time you create or update a stack. 
+* The optional `Outputs` section declares output values that you can import into other stacks (to create cross-stack references), return in response (to describe stack calls), or view on the AWS CloudFormation console. 
 
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
