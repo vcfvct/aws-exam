@@ -132,6 +132,8 @@
 ## dynamo
 * eventual vs read consistency(auto copy to 3 AZs). 
 * 1 write per second is one uint. good price for read, and not for write. $0.0065 per 10 write/50 read.  
+  * Read: 4KB/sec one unit, round to 4KB. for `eventually consistent` the required unit number is half, i.e. divided it by 2. , 
+  * Write: 1KB/sec one unit, round to 1KB.
 * easy to scale(push button) comparing to RDS relational. 
 * major limitations: 1. 400KB max item size. 2. 10 indexes per table
 * The maximum item size in DynamoDB is 400 KB, which includes both attribute name binary length (UTF-8 length) and attribute value lengths (again binary length). The attribute name counts towards the size limit.
