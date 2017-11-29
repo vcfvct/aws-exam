@@ -88,10 +88,12 @@
 
 ## SQS
 * default visibility timeout 30s. Max 12 hours.  
-* msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s.  
+* msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s. 
+* An SQS request can contain up to TEN (10) individual messages, as long as he total size of the request does not exceed 256KB.  
 * message order not guarateed.  
 * When the message visibility timeout expires, the message becomes available for processing by other EC2 instances. the maximum `VisibilityTimeout` of a message is 12 hours and default is 30s.
 * most of time,  short poll is not ideal since it does not query all the servers. long polling default timeout: `20s`.  
+* A FIFO SQS queue will end with the `.fifo` suffix.
 
 ## SNS
 * Fully Managed Push message service. (email/sms/email)  
@@ -138,7 +140,9 @@
 * easy to scale(push button) comparing to RDS relational. 
 * major limitations: 1. 400KB max item size. 2. 10 indexes per table
 * The maximum item size in DynamoDB is 400 KB, which includes both attribute name binary length (UTF-8 length) and attribute value lengths (again binary length). The attribute name counts towards the size limit.
-* length of a **partition key** value: 1- 2048 byte
+* length of a **partition key** value: 1- 2048 byte, maximum length of a sort key value is 1024 byte.
+* A single DynamoDB table partition can support a maximum of 3,000 read capacity units or 1,000 write capacity units.
+* DynamoDB uses optimistic concurrency control, and support conditional write
 
 ## redshift
 * single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
