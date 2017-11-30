@@ -13,6 +13,7 @@
 * A service to help you deploy web application
 * the application version typically points to some artifacts in S3.
 * All in all, it takes the uploaded Web application code and automatically provision and deploy the appropriate resources to make the web application operational.
+* java/tomcat, .net/IIS, Go, php, python, ruby, nodejs, docker
 
 ## Aws Batch
 * Job-> exeutable/shellscripts etc
@@ -93,12 +94,13 @@
 * message order not guarateed.  
 * When the message visibility timeout expires, the message becomes available for processing by other EC2 instances. the maximum `VisibilityTimeout` of a message is 12 hours and default is 30s.
 * most of time,  short poll is not ideal since it does not query all the servers. long polling default timeout: `20s`.  
+  * `ReceiveMessageWaitTimeSeconds` is an attribute of queue, and `WaitTimeSeconds` is a parameter when doing ReceiveMessage call. WaitTimeSeconds has higher priority. 
 * A FIFO SQS queue will end with the `.fifo` suffix.
 
 ## SNS
 * Fully Managed Push message service. (email/sms/email)  
 * A request can be up to 256kb(xml/json/unfomratted). 
-* 
+* `CreatePlatformEndpoint` call to upload token and register 
 
 ## SWF(simple workflow service)
 * A full managed State Tracker and Task Coordinator. Components: Taks, Marker, Timer, Singal. 
@@ -143,6 +145,7 @@
 * length of a **partition key** value: 1- 2048 byte, maximum length of a sort key value is 1024 byte.
 * A single DynamoDB table partition can support a maximum of 3,000 read capacity units or 1,000 write capacity units.
 * DynamoDB uses optimistic concurrency control, and support conditional write
+* number of tables and provisioned thruput can be raised by contacting aws support
 
 ## redshift
 * single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
