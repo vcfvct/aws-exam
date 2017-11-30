@@ -146,6 +146,9 @@
 * A single DynamoDB table partition can support a maximum of 3,000 read capacity units or 1,000 write capacity units.
 * DynamoDB uses optimistic concurrency control, and support conditional write
 * number of tables and provisioned thruput can be raised by contacting aws support
+* You can define a maximum of 5 local secondary indexes and 5 global secondary indexes per table.
+* `scan` operation has a limit of 1MB, use LastEvaluatdKey to apply in a subsequent operation. The thruput is 4KB. 
+
 
 ## redshift
 * single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
