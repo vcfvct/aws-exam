@@ -112,6 +112,10 @@
 
 ## Ops works
 * A configuration management service that enables you and operate applications of all shapes and sizes using **Chef**.
+* a stack is a container or group of resurces such as ELBs, EC2 instances, RDS instaces etc. 
+* a layer exists within a stack and consists of things like a web application layer, application processing layer or database layer. 
+  * receips are applied based on layer. 
+  * an instance must be assiged to at least 1 layer.
 * create up to 40 stacks, each stack can hold up to 40 layers, 40 instances and 40 apps. 
 
 ## EC2
@@ -196,6 +200,15 @@
 * Use the optional `Parameters` section to customize your templates. Parameters enable you to input custom values to your template each time you create or update a stack. 
 * The optional `Outputs` section declares output values that you can import into other stacks (to create cross-stack references), return in response (to describe stack calls), or view on the AWS CloudFormation console. 
 
+## Cloudwatch
+* basic metric every 5 min, and detailed metrics every 1 min
+* basic ec2 monitoring: cpu, disk, status, nework. Memory usage is customise metrics.
+* system status check is for Host(phiscal), to fix, start and stop the instance so it runs in a new physical host.  and Instance status check is for VM, to fix, reboot/modify OS. . 
+* cloudwatch file can store logs upto 15 month. 
+* EBS Volume status check, warning(degraded but still functionning), impaired(statlled/Not Available).
+* elasticCache, eviction monitoring(redis can only scale out, memcached can out/up). concurrency monitoring
+* `mon-disable-alarm-actions` to disable all actions for the specific alarms.
+
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
 * AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots
@@ -203,5 +216,4 @@
 * storage gateway.
   * gateway cached: storing all the data on s3 and cache frequently-used data locally.
   * gateway stored: use s3 to backup the data but store locally.
-* cloudwatch file can store logs upto 15 month. 
 * killing feature for EFS agains EBS is its concurrency, it can be mounted/accessed by multiple ec2 instances at the same time. 
