@@ -162,6 +162,7 @@
 ## elasticache
 * improve latency and thruput of read heavy.
 * Options: Redis and Memcached. 
+  * Redis has read replica. 
 
 ## Route 53
 * difference with cname, alias record can map naked domain name(`example.com`), but cname cannot(it can only map to like www.example.com, server1.example.com). and cname get charged but alias does not. 
