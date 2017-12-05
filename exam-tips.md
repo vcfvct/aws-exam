@@ -19,3 +19,5 @@ http://docs.aws.amazon.com/IAM/latest/UserGuide/idcredentials_temp.html
 * http://www.briefmenow.org/amazon/category/exam-aws-cda-update-july-11th-2017/
 ### SAA
 * http://www.briefmenow.org/amazon/category/exam-aws-saa-aws-certified-solutions-architect-associate/
+### sysops
+* http://vceguide.com/amazon/aws-sysops-aws-certified-sysops-administrator/

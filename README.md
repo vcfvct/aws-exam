@@ -2,6 +2,10 @@
 * Launch configuration: a template used by ASG to launch new instance. stuff like ami, instance type, ip address, storage volumne, SG etc... similar steps as to when creating a new EC2 instance. 
 * Auto Scaling Group: defines the desired capacity of group using scaling policie. and where the group should place resources such as which AZ. 
 * ELB can be associated with ASG to attach/detach instances based on scaling policy
+* According to [some exam questions](http://vceguide.com/what-advise-would-you-give-to-the-user/), looks like the asg can be scheduled up to a month in future. 
+* ASG will terminate the instance first and then launches a new instance.
+* we can use `as-setinstance-health` command from CLI to manually set an instance back to health, Auto Scaling will throw an error if the instance is already terminating or else it will mark it healthy
+* if an ASG failed to launch an single instance for more than 20 hours, it will suspend the scaling process.
 
 ## ECS(EC2 Container Service)
 * clusters can only scale in a single region.
@@ -39,7 +43,7 @@
 * [encrypt content](https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/). The below values are passed via http header when `put`. 
   * SSE with Amazon managed keys (SSE-S3)
   * SSE with KMS-managed keys, customer maintains a master key rather than encryption key. (SSE-KMS)
-  * SSE with customer privoded keys. you provide the encryption keys to Amazon, and they encrypt all data with your public key so that ONLY you can only read the data with your private key. This means nobody at Amazon can ever read your files, but you are totally screwed if you lose or damage your key; Amazon cannot help you recover.  (SSE-C)
+  * SSE with customer privoded keys. you provide the encryption keys to Amazon, and they encrypt all data with your public key so that ONLY you can only read the data with your private key. This means nobody at Amazon can ever read your files, but you are totally screwed if you lose or damage your key; Amazon cannot help you recover.  (SSE-C), the key/encryption algrithm are provided along with the data when uploading. 
 * Storage classes
   ![s3-storage-classes](/images/s3-storage-classes.png?raw=true "types of S3 Strage classes")
   * `Infrequent Access` (Standard - IA) is an Amazon S3 storage class for data that is accessed less frequently, but requires rapid access when needed. Standard - IA offers the high durability, throughput, and low latency of Amazon S3 Standard, with a low per GB storage price and per GB retrieval fee. This combination of low cost and high performance make Standard - IA ideal for long-term storage, backups, and as a data store for disaster recovery.
@@ -79,9 +83,10 @@
 ## EBS
 * snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
 * HDD[thrput optimized(ETL etc...) or cold], SSD, Magnetic volumns 
-* max volumn **16TB**
+* max volumn **16TB**, max volumn 5000, max snapshot 10000.
 * Data stored on EBS volumes is automatically and redundantly stored in multiple physical volumes in the same availability zone as part of the normal operations of the EBS service at no additional charge.
-* provisioned IOPS must be at least 10G. 
+* provisioned IOPS must be 4G-16Tb, 4G-16Tb   at most 50:1 (5000IOPS: 100G) or 400GB up with 20000 IOPS . 
+* use `dd`(disk duplicator) command to [prewarm the volumn](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/disk-performance.html). prewarm are not needed for new volumes, only for volumns restored from snapshot.
 
 ## AWS storage gateway
 * a hybrid storage service that enables your on-premises applications to seamlessly use AWS cloud storage.
@@ -96,6 +101,7 @@
 * most of time,  short poll is not ideal since it does not query all the servers. long polling default timeout: `20s`.  
   * `ReceiveMessageWaitTimeSeconds` is an attribute of queue, and `WaitTimeSeconds` is a parameter when doing ReceiveMessage call. WaitTimeSeconds has higher priority. 
 * A FIFO SQS queue will end with the `.fifo` suffix.
+* the queue can be deleted by aws if inactive for [30 day](https://forums.aws.amazon.com/ann.jspa?annID=2532). 
 
 ## SNS
 * Fully Managed Push message service. (email/sms/email)  
@@ -122,10 +128,15 @@
 * By default, you can only have **5** Elastic IP addresses per region.
 * You are billed instance-hours as long as your EC2 instance is in a running state.
 * The Elastic IP is a static public IP address that is associated with you Amazon account. When you have an Elastic IP address, you can seamlessly disassociate the IP address from an Instance and re-associate it to another instance. When this occurs, the name of the new instance is automatically mapped in DNS. With a standard static public IP address, there is no seamless transition, this process must be done by the user which creates service downtime. 
-* ec3 metadata url: http://169.254.169.254/latest/meta-data/
+* ec2 metadata url: http://169.254.169.254/latest/meta-data/
 * we can use IAM roles for temporary credentials in ec2 which has a hidden process to retrieve temp credential automatically. In [java](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-roles.html), we can use `InstanceProfileCredentialsProvider` to create client without having to get credential from sts manually. With `aws cli`, it should work out of box. some more explanation [here](http://parthicloud.com/how-to-access-s3-bucket-from-application-on-amazon-ec2-without-access-credentials/). To access the temp credentail via command line, run: `curl http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name_goes_here` according to this [post](https://derflounder.wordpress.com/2017/04/27/using-iam-roles-on-amazon-web-services-to-generate-temporary-credentials-for-ec2-instances/), which also provided the piped sed/awk command to extract the accessid/secrte.   
 * Uptime SLA for EC2/EBS is 99.95% 
+* When the user gets an `InsufficientInstanceCapacity` error while launching or starting an EC2 instance, it means that AWS does not currently have enough available capacity to service the user request
+
+## ELB
 * The ELB  `X-Forwarded-For` request header helps you identify the IP address of a client when you use HTTP/HTTPS load balancer.
+* Security policy is a combination of SSL protocols(TSL 1.0/1.1/1.2 SSL 2.0/3.0), SSL ciphers and the Server Order Preference option. 
+* Elastic Load Balancer allows using a Predefined Security Policies or creating a Custom Security Policy for specific needs. If none is specified, ELB selects the `latest` Predefined Security Policy.
 
 ## RDS
 * auto backup, stored in S3. might be slightly deley/latency during backup. 
@@ -188,6 +199,11 @@
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). it assumes deny first, and then  evaluates deny then evaluate allow. 
 * The distinction between a request being denied by default and an explicit deny in a policy is important. By default, a request is denied, but this can be overridden by an allow. In contrast, if a policy explicitly denies a request, that deny can't be overridden. [good example](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#AccessPolicyLanguage_Interplay)
+* limits: 
+  * Groups per AWS account: 300
+  * Users per AWS account: 5000
+  * Roles per AWS account: 1000
+  * Groups an IAM user can be a member of: 10
 
 ## Cloudfront
 * you can write file directly to edge
@@ -200,15 +216,20 @@
 * The optional `Conditions` section includes statements that define when a resource is created or when a property is defined. For example, you can compare whether a value is equal to another value. Based on the result of that condition, you can conditionally create resources.
 * Use the optional `Parameters` section to customize your templates. Parameters enable you to input custom values to your template each time you create or update a stack. 
 * The optional `Outputs` section declares output values that you can import into other stacks (to create cross-stack references), return in response (to describe stack calls), or view on the AWS CloudFormation console. 
+* limit: 200 stacks, 60 param and outputs in a single template, 4096 chars for description fields. 
+* AWS CloudFormation provides a `WaitCondition` resource which acts as a barrier and blocks the creation of other resources until a completion signal is received from an external source
 
 ## Cloudwatch
-* basic metric every 5 min, and detailed metrics every 1 min
+* basic metric every 5 min, and detailed metrics every 1 min. NOTE: no detail support for service other than `RDS/EC2/ASG/ELB/R53`, and ASG is detail by default
 * basic ec2 monitoring: cpu, disk, status, nework. Memory usage is customise metrics.
 * system status check is for Host(phiscal), to fix, start and stop the instance so it runs in a new physical host.  and Instance status check is for VM, to fix, reboot/modify OS. . 
 * cloudwatch file can store logs upto 15 month. 
 * EBS Volume status check, warning(degraded but still functionning), impaired(statlled/Not Available).
 * elasticCache, eviction monitoring(redis can only scale out, memcached can out/up). concurrency monitoring
 * `mon-disable-alarm-actions` to disable all actions for the specific alarms.
+* when sending data to metrics, if no data in some period, it is still recommended to send `0` instead of no value to monitor the health of the application
+* use `statistic-values` parameter for **put-metric-data** when sending aggregate data.  8KB for HTTP GET requests and 40KB for HTTP POST requests
+* data can be 2 weeks in the past and 2 hours into the future.
 
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
