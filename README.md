@@ -6,6 +6,7 @@
 * ASG will terminate the instance first and then launches a new instance.
 * We can use `as-setinstance-health` command from CLI to manually set an instance back to health, Auto Scaling will throw an error if the instance is already terminating or else it will mark it healthy
 * if an ASG failed to launch an single instance for more than 20 hours, it will suspend the scaling process.
+* AZ-rebalance will try to launch new instance then terminate old one, so if termination is suspended by user, ASG could grow up to 10% larger than its max size because ASG allow this temporarily during rebalancing activities
 
 ## ECS(EC2 Container Service)
 * clusters can only scale in a single region.
@@ -166,37 +167,38 @@
 
 
 ## redshift
-* single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
-* column based. advanced compresion. only avail in 1 AZ
+* single node, multi-node(1.lead node which manage connections and queries. 2.compute node). 
+* column based, advanced compression, only avail in 1 AZ
 * default block size for columnar storage is 1M, which is more efficient and further reduces the number of I/O requests needed to perform any database loading or other operations that are part of query execution.
-* auto backup. 
+* Auto backup. 
 
 ## elasticache
 * improve latency and thruput of read heavy.
 * Options: Redis and Memcached. 
-  * Redis has read replica. and auto backup option
+  * Redis has read replica. And auto backup option
 
 ## Route 53
 * difference with cname, alias record can map naked domain name(`example.com`), but cname cannot(it can only map to like www.example.com, server1.example.com). and cname get charged but alias does not. 
 * In addition to hosting domains, Route 53 serves as a domain registrar
-* R53 DNS failover can be integrated with ELB to health check on both elb and the instances behind. so it could direct traffic away from failed elb instance, or failover to other regions when problem.
+* R53 DNS failover can be integrated with ELB to health check on both elb and the instances behind. So it could direct traffic away from failed elb instance, or failover to other regions when problem.
 
 ## VPC
 * A VPC spans all the Availability Zones in the region. After creating a VPC, you can add one or more subnets in each Availability Zone. When you create a subnet, you specify the CIDR block for the subnet, which is a subset of the VPC CIDR block. **Each subnet must reside entirely within one Availability Zone and cannot span zones**. Availability Zones are distinct locations that are engineered to be isolated from failures in other Availability Zones. By launching instances in separate Availability Zones, you can protect your applications from the failure of a single location. We assign a unique ID to each subnet. 
-* AZ is like a 机房。vpc is like a datacenter. region is like 一个地区。
-* good explanation of [difference between public and private subnet](https://stackoverflow.com/a/22212017/1486742). Basically public subnet use `Internet Gateway` as default route and private subnet uses `NAT` as route. So the instance in public subnet with public IP will have internet acess since the route will use that IP directly. Inbound wise, with public IP, it could also be accessed if SG/ACL allows. For instance in private subnet, instance-initiated outbound internet access is possbile via NAT. However, ourside-world-init inbound access cannot be done since there is no public IP associate to the private subnet instance.
+* AZ is like a 机房。vpc is like a data-center. region is like 一个地区。
+* good explanation of [difference between public and private subnet](https://stackoverflow.com/a/22212017/1486742). Basically public subnet use `Internet Gateway` as default route and private subnet uses `NAT` as route. So the instance in public subnet with public IP will have internet access since the route will use that IP directly. Inbound wise, with public IP, it could also be accessed if SG/ACL allows. For instance in private subnet, instance-initiated outbound internet access is possible via NAT. However, outside-world-init inbound access cannot be done since there is no public IP associate to the private subnet instance.
 * To create a public subnet: 
   * create a internet gateway and attached to the custom vpc(one IGW for 1 vpc)
-  * create a new route table so that we do not change the default `main` route table. add the ip range(0.0.0.0/0) below the `local` and use the IGW(internet gateway) as target. This means all desitination other than our local subnet ip addresses will go to internet via IGW. We do not use main otherwise all subnet will have internet access. 
-  * associate subnet to the route tabel we just created in the `Subnet Association` tab in this route table. 
+  * create a new route table so that we do not change the default `main` route table. Add the ip range(0.0.0.0/0) below the `local` and use the IGW(internet gateway) as target. This means all destination other than our local subnet ip addresses will go to internet via IGW. We do not use main otherwise all subnet will have internet access. 
+  * associate subnet to the route table we just created in the `Subnet Association` tab in this route table. 
   * for public subnet, we can turn on auto assign public ip  in the `subnet actions` . 
-* for NAT instance, we can create a NAT ec2 instance in the public subnet. then in `actions -> networking -> change source/dest check`, disable it so that it would act as the middle man rather than a source/dest. In the `main` route table, add `0.0.0.0/0` below the local and add the target as the the NAT Ec2 instance, which means all subnet other than public will use this NAT to access internet.   
-* for NAT Gateway(more preferable, no ec2 maintanence comparing to NAT instance which is a single point of failure). On creation, selection public subnet where this NAT gateway will be deployed to. And then create a Elastic IP. Then in the route table, do the same thing as in the NAT instance.  
-* ACL vs SG, ACL is on the subnet level, support allow and deny rule, stateless that return traffic must be explicitly allowd, rules are tested sequetially(smaller first/higher priority).   where as SG is on instance level, support allow rule only, stateful that return traffic is automatically allowed regardless of any rule.  
+* for NAT instance, we can create a NAT ec2 instance in the public subnet. Then in `actions -> networking -> change source/dest check`, disable it so that it would act as the middle man rather than a source/dest. In the `main` route table, add `0.0.0.0/0` below the local and add the target as the NAT Ec2 instance, which means all subnet other than public will use this NAT to access internet.   
+* for NAT Gateway(more preferable, no ec2 maintenance comparing to NAT instance which is a single point of failure). On creation, selection public subnet where this NAT gateway will be deployed to. And then create a Elastic IP. Then in the route table, do the same thing as in the NAT instance.  
+* ACL vs SG, ACL is on the subnet level, support allow and deny rule, stateless that return traffic must be explicitly allowed, rules are tested sequentially(smaller first/higher priority). Where as SG is on instance level, support allow rule only, stateful that return traffic is automatically allowed regardless of any rule.  
 * one subnet can only associate with one network ACL. We need to add [Ephemeral port](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html#VPC_ACLs_Ephemeral_Ports) to the allow list if client init traffic. 
 * vpc log flow allow log all traffic to the vpc into the cloudwatch. 
-* vpc peering does not support *edge-to-edge* routing. so settings on vpc-a cannot be shared by vpc-b even they are peered. 
-* vpn connection between on-prem and vpc requires Hardware VPN Acess, on-prem Customer Gateway and a Virtual Private Gateway. 
+* vpc peering does not support *edge-to-edge* routing, so settings on vpc-a cannot be shared by vpc-b even they are peered. 
+* vpn connection between on-prem and vpc requires Hardware VPN Access, on-prem Customer Gateway and a Virtual Private Gateway. 
+* VPC allows the user to set up a connection between his VPC and corporate or home network data centre `without` IP rage overlapping. 
 
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). it assumes deny first, and then  evaluates deny then evaluate allow. 
