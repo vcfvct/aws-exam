@@ -148,6 +148,7 @@
   * mysql compatible relational database. 
   * auto scale from 10G to 64TB. 2 copies in each AZ and minium in 3 az, so 6 copies. 
 * backup retention period, 1(default) to 35 days. 	 
+* user can view error log, slow query log and general log.
 
 ## dynamo
 * eventual vs read consistency(auto copy to 3 AZs). 
@@ -169,15 +170,17 @@
 * single node, multi-node(1. lead node which manage connections and queries. 2.compute node). 
 * column based. advanced compresion. only avail in 1 AZ
 * default block size for columnar storage is 1M, which is more efficient and further reduces the number of I/O requests needed to perform any database loading or other operations that are part of query execution.
+* auto backup. 
 
 ## elasticache
 * improve latency and thruput of read heavy.
 * Options: Redis and Memcached. 
-  * Redis has read replica. 
+  * Redis has read replica. and auto backup option
 
 ## Route 53
 * difference with cname, alias record can map naked domain name(`example.com`), but cname cannot(it can only map to like www.example.com, server1.example.com). and cname get charged but alias does not. 
 * In addition to hosting domains, Route 53 serves as a domain registrar
+* R53 DNS failover can be integrated with ELB to health check on both elb and the instances behind. so it could direct traffic away from failed elb instance, or failover to other regions when problem.
 
 ## VPC
 * A VPC spans all the Availability Zones in the region. After creating a VPC, you can add one or more subnets in each Availability Zone. When you create a subnet, you specify the CIDR block for the subnet, which is a subset of the VPC CIDR block. **Each subnet must reside entirely within one Availability Zone and cannot span zones**. Availability Zones are distinct locations that are engineered to be isolated from failures in other Availability Zones. By launching instances in separate Availability Zones, you can protect your applications from the failure of a single location. We assign a unique ID to each subnet. 
@@ -226,10 +229,17 @@
 * cloudwatch file can store logs upto 15 month. 
 * EBS Volume status check, warning(degraded but still functionning), impaired(statlled/Not Available).
 * elasticCache, eviction monitoring(redis can only scale out, memcached can out/up). concurrency monitoring
-* `mon-disable-alarm-actions` to disable all actions for the specific alarms.
+* `mon-disable-alarm-actions` to disable all actions for the specific alarms. `mon-set-alarm-state` command to temporarily changes the alarm state of the specified alarm, `ALARM, OK or INSUFFICIENT_DATA`. 
 * when sending data to metrics, if no data in some period, it is still recommended to send `0` instead of no value to monitor the health of the application
 * use `statistic-values` parameter for **put-metric-data** when sending aggregate data.  8KB for HTTP GET requests and 40KB for HTTP POST requests
 * data can be 2 weeks in the past and 2 hours into the future.
+
+## DR
+* large RTO/RPO to small: 
+  * backup&retore, backup data to S3/Glacier, and restore when DR. 
+  * Pilot Light(RDS/AD replicated andelastc IP/ENI Or R53+ELB), 
+  * Warm Standby, run a mini version live all the time. when DR, scale up/out 
+  * Multi-Site. active-active, both running at the same time. still write to the main DB. failover to backup db when DR.
 
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
@@ -239,3 +249,4 @@
   * gateway cached: storing all the data on s3 and cache frequently-used data locally.
   * gateway stored: use s3 to backup the data but store locally.
 * killing feature for EFS agains EBS is its concurrency, it can be mounted/accessed by multiple ec2 instances at the same time. 
+* The maximum size of a tag key is 128 unicode characters.
