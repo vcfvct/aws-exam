@@ -1,57 +1,56 @@
 ## Auto Scaling
-* Launch configuration: a template used by ASG to launch new instance. stuff like ami, instance type, ip address, storage volumne, SG etc... similar steps as to when creating a new EC2 instance. 
-* Auto Scaling Group: defines the desired capacity of group using scaling policie. and where the group should place resources such as which AZ. 
+* Launch configuration: a template used by ASG to launch new instance. Stuff like ami, instance type, ip address, storage volume, SG etc... Similar steps as to when creating a new EC2 instance. 
+* Auto Scaling Group: defines the desired capacity of group using scaling policies. And where the group should place resources such as which AZ. 
 * ELB can be associated with ASG to attach/detach instances based on scaling policy
 * According to [some exam questions](http://vceguide.com/what-advise-would-you-give-to-the-user/), looks like the asg can be scheduled up to a month in future. 
 * ASG will terminate the instance first and then launches a new instance.
-* we can use `as-setinstance-health` command from CLI to manually set an instance back to health, Auto Scaling will throw an error if the instance is already terminating or else it will mark it healthy
+* We can use `as-setinstance-health` command from CLI to manually set an instance back to health, Auto Scaling will throw an error if the instance is already terminating or else it will mark it healthy
 * if an ASG failed to launch an single instance for more than 20 hours, it will suspend the scaling process.
 
 ## ECS(EC2 Container Service)
 * clusters can only scale in a single region.
 * Instances within ECS cluster have Docker daemon and ECS agent so that the ECS command can be translated to Docker commands. 
 * ECS `task definitioin`(json format) is like ASG for ec2 defining variables for the cluster. The cluster uses IAM role to access required resources.
-* max 10 tasks per instance(host). max 10 containers per taks definition. One LB per service.  
+* Max 10 tasks per instance(host). Max 10 containers per task definition. One LB per service.  
 
 ## Elastic BeanStalk
 * A service to help you deploy web application
 * the application version typically points to some artifacts in S3.
 * All in all, it takes the uploaded Web application code and automatically provision and deploy the appropriate resources to make the web application operational.
-* java/tomcat, .net/IIS, Go, php, python, ruby, nodejs, docker
+* Java/tomcat, .net/IIS, Go, php, python, ruby, nodejs, docker
 
 ## Aws Batch
-* Job-> exeutable/shellscripts etc
-* Job definitions -> specific params for jobs like cpus/data volumns/iam roles etc
+* Job-> executable/shell-scripts etc
+* Job definitions -> specific params for jobs like cpus/data volumes/iam roles etc
 * job queue -> scheduled jobs are placed into a job queue until they run. 
-* job scheduling -> takes care of when a job shoudl be run and from which Env. typically FIFO. 
-* compute env -> ecs or unmanged Env(maanged/maintain ourself). 
+* job scheduling -> takes care of when a job should be run and from which Env, typically FIFO. 
+* compute env -> ecs or unmanaged Env(managed/maintain ourself). 
 
 ## Lightsail
-* a Virtual Private Server backed by aws. resembles EC2 but simpler and easier, good for small scale use cases.
-  * pick a instance, add a launch script(sh), keypair, instance plan(pay). AZ(optional), 
+* a Virtual Private Server backed by aws. Resembles EC2 but simpler and easier, good for small scale use cases.
+  * pick a instance, add a launch script(sh), key-pair, instance plan(pay). AZ(optional), 
 
 ## S3
-* multi-regions.  objects are copied within region across different AZs. Bucketname cannot be changed. 
-* object-size: **0-5TB**. single upload put limit: **5GB**.
-* maximun number of S3 buckets per aws account: **100**.
+* multi-regions. Objects are copied within region across different AZs. Bucket-name cannot be changed. 
+* object-size: **0-5TB**. Single upload put limit: **5GB**.
+* maximum number of S3 buckets per aws account: **100**.
 * Amazon S3 bucket names are globally unique, regardless of the AWS Region in which you create the bucket.
 * Access control
   * IAM policy -> user/role
-  * ACL(Access control list) which is legacy -> add permissions on indicidual objects. 
+  * ACL(Access control list) which is legacy -> add permissions on individual objects. 
   * bucket policy -> add/deny permissions across some or all objects within a single bucket. (higher priority to user/role policy). 
   * query string auth -> share objects via URLs that are valid for a specified period of time. 
 * [encrypt content](https://aws.amazon.com/blogs/security/how-to-prevent-uploads-of-unencrypted-objects-to-amazon-s3/). The below values are passed via http header when `put`. 
   * SSE with Amazon managed keys (SSE-S3)
   * SSE with KMS-managed keys, customer maintains a master key rather than encryption key. (SSE-KMS)
-  * SSE with customer privoded keys. you provide the encryption keys to Amazon, and they encrypt all data with your public key so that ONLY you can only read the data with your private key. This means nobody at Amazon can ever read your files, but you are totally screwed if you lose or damage your key; Amazon cannot help you recover.  (SSE-C), the key/encryption algrithm are provided along with the data when uploading. 
+  * SSE with customer provided keys. You provide the encryption keys to Amazon, and they encrypt all data with your public key so that ONLY you can only read the data with your private key. This means nobody at Amazon can ever read your files, but you are totally screwed if you lose or damage your key; Amazon cannot help you recover.  (SSE-C), the key/encryption algorithm are provided along with the data when uploading. 
 * Storage classes
   ![s3-storage-classes](/images/s3-storage-classes.png?raw=true "types of S3 Strage classes")
   * `Infrequent Access` (Standard - IA) is an Amazon S3 storage class for data that is accessed less frequently, but requires rapid access when needed. Standard - IA offers the high durability, throughput, and low latency of Amazon S3 Standard, with a low per GB storage price and per GB retrieval fee. This combination of low cost and high performance make Standard - IA ideal for long-term storage, backups, and as a data store for disaster recovery.
-  * `Reduced Redundancy Storage`: [deprecated according to here](https://mysteriouscode.io/blog/aws-s3-storage-classes-pricing-is-not-what-you-think/). an Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage. It provides a highly available solution for distributing or sharing content that is durably stored elsewhere, or for storing thumbnails, transcoded media, or other processed data that can be easily reproduced. 
-* versioning(file with same name), lifecycle( days to move lower classes or glacier). access log. event integrate with sns/sqs/lambda. cross region replication. 
+  * `Reduced Redundancy Storage`: [deprecated according to here](https://mysteriouscode.io/blog/aws-s3-storage-classes-pricing-is-not-what-you-think/). An Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage. It provides a highly available solution for distributing or sharing content that is durably stored elsewhere, or for storing thumbnails, transcoded media, or other processed data that can be easily reproduced. 
+* versioning(file with same name), life-cycle( days to move lower classes or glacier). Access log. Event integrate with sns/sqs/lambda. Cross region replication. 
 * to make files available to CDN, we could make the bucket files public by setting bucket policy:
 ```
-{
   "Id": "Policy1380877762691",
   "Statement": [
     {
@@ -75,14 +74,14 @@
   * path style: `US East (N. Virginia) region endpoint`, http://s3.amazonaws.com/*bucketName*.  `other Region-specific endpoint`, http://s3-*aws-region*.amazonaws.com/*bucketName*
   * for website, it will be http(s)://*bucketName*.s3-website-*aws-region*.amazonaws.com/
 * s3 has `read-after-write` consistency for `PUT` of new object, and `eventual` consistency for `PUT` on existing object and `Delete` http request.
-* mimimun object size for S3-IA is 128KB. 
-* add `x-amz-website-redirect-location` for website/webpage redirect. 
+* Minimum object size for S3-IA is 128KB. 
+* add `x-amz-website-redirect-location` for website/page redirect. 
 * in a versioned bucket, Only the **bucket owner** can delete a specified object version.
 * `S3 Transfer Acceleration` is especially useful in cases where your bucket resides in a Region other than the one in which the file transfer was originated.
 
 ## EBS
-* snapshot store data on volumns in S3 which is replicated to multiple AZs. EBS volumns are replicated within a specific AZ, snapshots are tied to the region. snapshots can be shared across regions. 
-* HDD[thrput optimized(ETL etc...) or cold], SSD, Magnetic volumns 
+* snapshot store data on volumes in S3 which is replicated to multiple AZs. EBS volumes are replicated within a specific AZ, snapshots are tied to the region. Snapshots can be shared across regions. Snapshots are incremental and asynchronous. 
+* HDD[thruput optimized(ETL etc...) or cold], SSD, Magnetic volumes 
 * max volumn **16TB**, max volumn 5000, max snapshot 10000.
 * Data stored on EBS volumes is automatically and redundantly stored in multiple physical volumes in the same availability zone as part of the normal operations of the EBS service at no additional charge.
 * provisioned IOPS must be 4G-16Tb, 4G-16Tb   at most 50:1 (5000IOPS: 100G) or 400GB up with 20000 IOPS . 
@@ -210,7 +209,7 @@
 
 ## Cloudfront
 * you can write file directly to edge
-* object expires in 24hr by default and minium is 3600s(one hour). you can change the CloudFront settings for Minimum TTL, Maximum TTL, and Default TTL for a cache behavior. 
+* object expires in 24hr by default and minimum is 3600s (one hour). you can change the CloudFront settings for Minimum TTL, Maximum TTL, and Default TTL for a cache behavior. 
 * invalidate has 3000 object per distribution one time.  
 * Create an Origin Access Identity (OAI) for CloudFront and grant access to the objects in your S3 bucket to that OAI and create signed url using java/perl etc... 
 
@@ -224,20 +223,21 @@
 
 ## Cloudwatch
 * basic metric every 5 min, and detailed metrics every 1 min. NOTE: no detail support for service other than `RDS/EC2/ASG/ELB/R53`, and ASG is detail by default
-* basic ec2 monitoring: cpu, disk, status, nework. Memory usage is customise metrics.
+* basic ec2 monitoring: cpu, disk, status, network. Memory usage is customise metrics.
 * system status check is for Host(phiscal), to fix, start and stop the instance so it runs in a new physical host.  and Instance status check is for VM, to fix, reboot/modify OS. . 
-* cloudwatch file can store logs upto 15 month. 
-* EBS Volume status check, warning(degraded but still functionning), impaired(statlled/Not Available).
+* cloudwatch file can store logs up to 15 month. 
+* EBS Volume status check, warning(degraded but still functioning), impaired(stalled/Not Available).
 * elasticCache, eviction monitoring(redis can only scale out, memcached can out/up). concurrency monitoring
 * `mon-disable-alarm-actions` to disable all actions for the specific alarms. `mon-set-alarm-state` command to temporarily changes the alarm state of the specified alarm, `ALARM, OK or INSUFFICIENT_DATA`. 
 * when sending data to metrics, if no data in some period, it is still recommended to send `0` instead of no value to monitor the health of the application
 * use `statistic-values` parameter for **put-metric-data** when sending aggregate data.  8KB for HTTP GET requests and 40KB for HTTP POST requests
 * data can be 2 weeks in the past and 2 hours into the future.
+* CloudWatch supports Sum, Min,Max, Sample Data and Average statistics aggregation.
 
 ## DR
 * large RTO/RPO to small: 
-  * backup&retore, backup data to S3/Glacier, and restore when DR. 
-  * Pilot Light(RDS/AD replicated andelastc IP/ENI Or R53+ELB), 
+  * backup&restore, backup data to S3/Glacier, and restore when DR. 
+  * Pilot Light(RDS/AD replicated and elastic IP/ENI Or R53+ELB), 
   * Warm Standby, run a mini version live all the time. when DR, scale up/out 
   * Multi-Site. active-active, both running at the same time. still write to the main DB. failover to backup db when DR.
 
@@ -248,5 +248,5 @@
 * storage gateway.
   * gateway cached: storing all the data on s3 and cache frequently-used data locally.
   * gateway stored: use s3 to backup the data but store locally.
-* killing feature for EFS agains EBS is its concurrency, it can be mounted/accessed by multiple ec2 instances at the same time. 
+* killing feature for EFS against EBS is its concurrency, it can be mounted/accessed by multiple ec2 instances at the same time. 
 * The maximum size of a tag key is 128 unicode characters.
