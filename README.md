@@ -244,6 +244,9 @@
   * Warm Standby, run a mini version live all the time. when DR, scale up/out 
   * Multi-Site. active-active, both running at the same time. still write to the main DB. failover to backup db when DR.
 
+## Snowball
+* import/export to S3. Regular snowball(80TB), snowball edge(TB with computation ability), snowball mobile(PB)
+
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
 * AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots
