@@ -29,12 +29,12 @@
 
 ## Lightsail
 * a Virtual Private Server backed by aws. Resembles EC2 but simpler and easier, good for small scale use cases.
-  * pick a instance, add a launch script(sh), key-pair, instance plan(pay). AZ(optional), 
+  * Pick a instance, add a launch script(sh), key-pair, instance plan(pay). AZ(optional), 
 
 ## S3
 * multi-regions. Objects are copied within region across different AZs. Bucket-name cannot be changed. 
 * object-size: **0-5TB**. Single upload put limit: **5GB**.
-* maximum number of S3 buckets per aws account: **100**.
+* Maximum number of S3 buckets per aws account: **100**.
 * Amazon S3 bucket names are globally unique, regardless of the AWS Region in which you create the bucket.
 * Access control
   * IAM policy -> user/role
@@ -85,8 +85,10 @@
 * HDD[thruput optimized(ETL etc...) or cold], SSD, Magnetic volumes 
 * max volume **16TB**, max volume 5000, max snapshot 10000.
 * Data stored on EBS volumes is automatically and redundantly stored in multiple physical volumes in the same availability zone as part of the normal operations of the EBS service at no additional charge.
-* provisioned IOPS must be 4G-16Tb, 4G-16Tb   at most 50:1 (5000IOPS: 100G) or 400GB up with 20000 IOPS . 
-* use `dd`(disk duplicator) command to [prewarm the volume](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/disk-performance.html). prewarm are not needed for new volumes, only for volumes restored from snapshot.
+* Provisioned IOPS must be 4G-16Tb, 4G-16Tb   at most 50:1 (5000IOPS: 100G) or 640GB up with 32000 IOPS . 
+* use `dd`(disk duplicator) command to [prewarm the volume](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/disk-performance.html). Prewarm are not needed for new volumes, only for volumes restored from snapshot.
+* Recommended queue length is 1 per 200 IOPS.
+* RAID 5 and RAID 6 are not recommended for Amazon EBS because the parity write operations of these RAID modes consume some of the IOPS available to your volumes
 
 ## AWS storage gateway
 * a hybrid storage service that enables your on-premises applications to seamlessly use AWS cloud storage.
@@ -94,14 +96,14 @@
 
 ## SQS
 * default visibility timeout 30s. Max 12 hours.  
-* msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s. 
+* Msg retention period: 4 days(1 min to 2 weeks). Max msg size 256K. Receive msg wait time 0s. 
 * An SQS request can contain up to TEN (10) individual messages, as long as he total size of the request does not exceed 256KB.  
-* message order not guaranteed.  
-* When the message visibility timeout expires, the message becomes available for processing by other EC2 instances. the maximum `VisibilityTimeout` of a message is 12 hours and default is 30s.
-* most of time,  short poll is not ideal since it does not query all the servers. long polling default timeout: `20s`.  
+* Message order not guaranteed.  
+* When the message visibility timeout expires, the message becomes available for processing by other EC2 instances. The maximum `VisibilityTimeout` of a message is 12 hours and default is 30s.
+* Most of time,  short poll is not ideal since it does not query all the servers. Long polling default timeout: `20s`.  
   * `ReceiveMessageWaitTimeSeconds` is an attribute of queue, and `WaitTimeSeconds` is a parameter when doing ReceiveMessage call. WaitTimeSeconds has higher priority. 
 * A FIFO SQS queue will end with the `.fifo` suffix.
-* the queue can be deleted by aws if inactive for [30 day](https://forums.aws.amazon.com/ann.jspa?annID=2532). 
+* The queue can be deleted by aws if inactive for [30 day](https://forums.aws.amazon.com/ann.jspa?annID=2532). 
 
 ## SNS
 * Fully Managed Push message service. (email/sms/email)  
@@ -118,18 +120,18 @@
 
 ## Ops works
 * A configuration management service that enables you and operate applications of all shapes and sizes using **Chef**.
-* a stack is a container or group of resources such as ELBs, EC2 instances, RDS instances etc. 
+* A stack is a container or group of resources such as ELBs, EC2 instances, RDS instances etc. 
 * a layer exists within a stack and consists of things like a web application layer, application processing layer or database layer. 
   * recipes are applied based on layer. 
   * an instance must be assigned to at least 1 layer.
-* create up to 40 stacks, each stack can hold up to 40 layers, 40 instances and 40 apps. 
+* Create up to 40 stacks, each stack can hold up to 40 layers, 40 instances and 40 apps. 
 
 ## EC2
 * By default, you can only have **5** Elastic IP addresses per region.
 * You are billed instance-hours as long as your EC2 instance is in a running state.
 * The Elastic IP is a static public IP address that is associated with you Amazon account. When you have an Elastic IP address, you can seamlessly disassociate the IP address from an Instance and re-associate it to another instance. When this occurs, the name of the new instance is automatically mapped in DNS. With a standard static public IP address, there is no seamless transition, this process must be done by the user which creates service downtime. 
 * ec2 metadata url: http://169.254.169.254/latest/meta-data/
-* we can use IAM roles for temporary credentials in ec2 which has a hidden process to retrieve temp credential automatically. In [java](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-roles.html), we can use `InstanceProfileCredentialsProvider` to create client without having to get credential from sts manually. With `aws cli`, it should work out of box. some more explanation [here](http://parthicloud.com/how-to-access-s3-bucket-from-application-on-amazon-ec2-without-access-credentials/). To access the temp credential via command line, run: `curl http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name_goes_here` according to this [post](https://derflounder.wordpress.com/2017/04/27/using-iam-roles-on-amazon-web-services-to-generate-temporary-credentials-for-ec2-instances/), which also provided the piped sed/awk command to extract the accessid/secret.   
+* we can use IAM roles for temporary credentials in ec2 which has a hidden process to retrieve temp credential automatically. In [java](http://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/java-dg-roles.html), we can use `InstanceProfileCredentialsProvider` to create client without having to get credential from sts manually. With `aws cli`, it should work out of box. Some more explanation [here](http://parthicloud.com/how-to-access-s3-bucket-from-application-on-amazon-ec2-without-access-credentials/). To access the temp credential via command line, run: `curl http://169.254.169.254/latest/meta-data/iam/security-credentials/role_name_goes_here` according to this [post](https://derflounder.wordpress.com/2017/04/27/using-iam-roles-on-amazon-web-services-to-generate-temporary-credentials-for-ec2-instances/), which also provided the piped sed/awk command to extract the accessid/secret.   
 * Uptime SLA for EC2/EBS is 99.95% 
 * When the user gets an `InsufficientInstanceCapacity` error while launching or starting an EC2 instance, it means that AWS does not currently have enough available capacity to service the user request
 * every stop/start will be charged an extra hour, while reboot does not charge. 
@@ -138,6 +140,7 @@
 * The ELB  `X-Forwarded-For` request header helps you identify the IP address of a client when you use HTTP/HTTPS load balancer.
 * Security policy is a combination of SSL protocols(TSL 1.0/1.1/1.2 SSL 2.0/3.0), SSL ciphers and the Server Order Preference option. 
 * Elastic Load Balancer allows using a Predefined Security Policies or creating a Custom Security Policy for specific needs. If none is specified, ELB selects the `latest` Predefined Security Policy.
+* When you register an instance with an elastic network interface (ENI) attached, the load balancer routes traffic to the primary IP address of the **iprimary** interface (eth0) of the instance.
 
 ## RDS
 * auto backup, stored in S3. Might be slightly delay/latency during backup. 
@@ -156,10 +159,10 @@
 * 1 write per second is one unit. Good price for read, and not for write. $0.0065 per 10 write/50 read.  
   * Read: 4KB/sec one unit, round to 4KB. For `eventually consistent` the required unit number is half, i.e. divided it by 2. , 
   * Write: 1KB/sec one unit, round to 1KB.
-* easy to scale(push button) comparing to RDS relational. 
+* Easy to scale(push button) comparing to RDS relational. 
 * major limitations: 1. 400KB max item size. 2. 10 indexes per table
 * The maximum item size in DynamoDB is 400 KB, which includes both attribute name binary length (UTF-8 length) and attribute value lengths (again binary length). The attribute name counts towards the size limit.
-* length of a **partition key** value: 1- 2048 byte, maximum length of a sort key value is 1024 byte.
+* Length of a **partition key** value: 1- 2048 byte, maximum length of a sort key value is 1024 byte.
 * A single DynamoDB table partition can support a maximum of 3,000 read capacity units or 1,000 write capacity units.
 * DynamoDB uses optimistic concurrency control, and support conditional write
 * number of tables and provisioned thruput can be raised by contacting aws support
@@ -175,8 +178,11 @@
 
 ## elasticache
 * improve latency and thruput of read heavy.
-* Options: Redis and Memcached. 
-  * Redis has read replica. And auto backup option
+* Options: Redis and Memcached. Redis is more complex. 
+  * Redis has read replica. And auto backup option, persistence, advanced data-type, in-memory sort, pub/sub. 
+  * memcached has multi-thread and scale horizontally capability
+* You cannot use ElastiCache in a VPC that is configured for dedicated instance tenancy.
+* Default cache port: for Memcached 11211 and for Redis 6379.
 
 ## Route 53
 * difference with cname, alias record can map naked domain name(`example.com`), but cname cannot(it can only map to like www.example.com, server.example.com). And cname get charged but alias does not. 
@@ -195,14 +201,14 @@
 * for NAT instance, we can create a NAT ec2 instance in the public subnet. Then in `actions -> networking -> change source/dest check`, disable it so that it would act as the middle man rather than a source/dest. In the `main` route table, add `0.0.0.0/0` below the local and add the target as the NAT Ec2 instance, which means all subnet other than public will use this NAT to access internet.   
 * For NAT Gateway(more preferable, no ec2 maintenance comparing to NAT instance which is a single point of failure). On creation, selection public subnet where this NAT gateway will be deployed to. And then create a Elastic IP. Then in the route table, do the same thing as in the NAT instance.  
 * ACL vs SG, ACL is on the subnet level, support allow and deny rule, stateless that return traffic must be explicitly allowed, rules are tested sequentially(smaller first/higher priority). Where as SG is on instance level, support allow rule only, stateful that return traffic is automatically allowed regardless of any rule.  
-* one subnet can only associate with one network ACL. We need to add [Ephemeral port](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html#VPC_ACLs_Ephemeral_Ports) to the allow list if client init traffic. 
+* One subnet can only associate with one network ACL. We need to add [Ephemeral port](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html#VPC_ACLs_Ephemeral_Ports) to the allow list if client init traffic. 
 * vpc log flow allow log all traffic to the vpc into the cloudwatch. 
 * vpc peering does not support *edge-to-edge* routing, so settings on vpc-a cannot be shared by vpc-b even they are peered. 
 * vpn connection between on-prem and vpc requires Hardware VPN Access, on-prem Customer Gateway and a Virtual Private Gateway. 
 * VPC allows the user to set up a connection between his VPC and corporate or home network data centre `without` IP rage overlapping. 
 
 ## IAM
-* [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). it assumes deny first, and then  evaluates deny then evaluate allow. 
+* [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). It assumes deny first, and then  evaluates deny then evaluate allow. 
 * The distinction between a request being denied by default and an explicit deny in a policy is important. By default, a request is denied, but this can be overridden by an allow. In contrast, if a policy explicitly denies a request, that deny can't be overridden. [good example](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#AccessPolicyLanguage_Interplay)
 * limits: 
   * Groups per AWS account: 300
@@ -212,7 +218,7 @@
 
 ## Cloudfront
 * you can write file directly to edge
-* object expires in 24hr by default and minimum is 3600s (one hour). you can change the CloudFront settings for Minimum TTL, Maximum TTL, and Default TTL for a cache behavior. 
+* object expires in 24hr by default and minimum is 3600s (one hour). You can change the CloudFront settings for Minimum TTL, Maximum TTL, and Default TTL for a cache behavior. 
 * invalidate has 3000 object per distribution one time.  
 * Create an Origin Access Identity (OAI) for CloudFront and grant access to the objects in your S3 bucket to that OAI and create signed url using java/perl etc... 
 
@@ -227,10 +233,10 @@
 ## Cloudwatch
 * basic metric every 5 min, and detailed metrics every 1 min. NOTE: no detail support for service other than `RDS/EC2/ASG/ELB/R53`, and ASG is detail by default
 * basic ec2 monitoring: cpu, disk, status, network. Memory usage is customise metrics.
-* system status check is for Host(phiscal), to fix, start and stop the instance so it runs in a new physical host.  and Instance status check is for VM, to fix, reboot/modify OS. . 
+* system status check is for Host(phiscal), to fix, start and stop the instance so it runs in a new physical host. And Instance status check is for VM, to fix, reboot/modify OS. . 
 * cloudwatch file can store logs up to 15 month. 
 * EBS Volume status check, warning(degraded but still functioning), impaired(stalled/Not Available).
-* elasticCache, eviction monitoring(redis can only scale out, memcached can out/up). concurrency monitoring
+* elasticCache, eviction monitoring(redis can only scale out, memcached can out/up). Concurrency monitoring
 * `mon-disable-alarm-actions` to disable all actions for the specific alarms. `mon-set-alarm-state` command to temporarily changes the alarm state of the specified alarm, `ALARM, OK or INSUFFICIENT_DATA`. 
 * when sending data to metrics, if no data in some period, it is still recommended to send `0` instead of no value to monitor the health of the application
 * use `statistic-values` parameter for **put-metric-data** when sending aggregate data.  8KB for HTTP GET requests and 40KB for HTTP POST requests
@@ -241,19 +247,26 @@
 * large RTO/RPO to small: 
   * backup&restore, backup data to S3/Glacier, and restore when DR. 
   * Pilot Light(RDS/AD replicated and elastic IP/ENI Or R53+ELB), 
-  * Warm Standby, run a mini version live all the time. when DR, scale up/out 
-  * Multi-Site. active-active, both running at the same time. still write to the main DB. failover to backup db when DR.
+  * Warm Standby, run a mini version live all the time. When DR, scale up/out 
+  * Multi-Site. Active-active, both running at the same time. Still write to the main DB. Failover to backup db when DR.
 
 ## Snowball
 * import/export to S3. Regular snowball(80TB), snowball edge(TB with computation ability), snowball mobile(PB)
+
+## Cloud HSM hardware security modules
+* a physical device used within a VPC. And can be used for VPC peering. 
+* The service is to protect your encryption keys within HSM. It can be integrated with Apache/S3/RDS/EBS.
+* Not fault tolerate. 
+* an EC2 instance need to be deployed in the same subnet as the HSM to serve as control instance, and a SG with port 22/3389(SSH/RDP) open to your network.  
 
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
 * AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots
 * large file transfer: snowball or aws-import/export 
 * storage gateway.
-  * gateway cached: storing all the data on s3 and cache frequently-used data locally.
-  * gateway stored: use s3 to backup the data but store locally.
-* killing feature for EFS against EBS is its concurrency, it can be mounted/accessed by multiple ec2 instances at the same time. 
+  * Gateway cached: storing all the data on s3 and cache frequently-used data locally.
+  * Gateway stored: use s3 to backup the data but store locally.
+* Killing feature for EFS against EBS is its concurrency, it can be mounted/accessed by multiple ec2 instances at the same time. 
 * The maximum size of a tag key is 128 unicode characters.
-l
+* Arn format: arn:partition:service:region:account-id:resource-type(/or:)resource. Some resource type does not require region/account-id, so those part will be omitted and show as double/triple colon. 
+* By default, temporary security credentials for an IAM user are valid for a maximum of 12 hours, but you can request a duration as short as 15 minutes or as long as 36 hours. For security reasons, a token for an AWS account root user is restricted to a duration of one hour.
