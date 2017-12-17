@@ -136,6 +136,7 @@
 * Uptime SLA for EC2/EBS is 99.95% 
 * When the user gets an `InsufficientInstanceCapacity` error while launching or starting an EC2 instance, it means that AWS does not currently have enough available capacity to service the user request
 * every stop/start will be charged an extra hour, while reboot does not charge. 
+* Shared <-> Dedicated are concepts for hardware. Reserved, On-Demand, Spot are for pricing and usage mode. For Dedicated tenancy, reserved instances is also possible.
 
 ## ELB
 * The ELB  `X-Forwarded-For` request header helps you identify the IP address of a client when you use HTTP/HTTPS load balancer.
