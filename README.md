@@ -154,6 +154,7 @@
   * auto scale from 10G to 64TB. 2 copies in each AZ and minimum in 3 AZ, so 6 copies. 
 * backup retention period, 1(default) to 35 days. 	 
 * user can view error log, slow query log and general log.
+* min IOPS 1000, min storage for IOPS 100G
 
 ## dynamo
 * eventual vs read consistency(auto copy to 3 AZs). 
@@ -207,6 +208,7 @@
 * vpc peering does not support *edge-to-edge* routing, so settings on vpc-a cannot be shared by vpc-b even they are peered. 
 * vpn connection between on-prem and vpc requires Hardware VPN Access, on-prem Customer Gateway and a Virtual Private Gateway. 
 * VPC allows the user to set up a connection between his VPC and corporate or home network data centre `without` IP rage overlapping. 
+* If you have multiple VPN connections, you can provide secure communication between sites using the AWS VPN CloudHub. 
 
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). It assumes deny first, and then  evaluates deny then evaluate allow. 
@@ -259,6 +261,9 @@
 * The service is to protect your encryption keys within HSM. It can be integrated with Apache/S3/RDS/EBS.
 * Not fault tolerate. 
 * an EC2 instance need to be deployed in the same subnet as the HSM to serve as control instance, and a SG with port 22/3389(SSH/RDP) open to your network.  
+
+## Data pipeline
+* By default, an activity retries three times before entering a hard failure state. You can increase the number of automatic retries to 10
 
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
