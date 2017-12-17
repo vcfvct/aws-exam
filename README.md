@@ -211,6 +211,7 @@
 * VPC allows the user to set up a connection between his VPC and corporate or home network data centre `without` IP rage overlapping. 
 * If you have multiple VPN connections, you can provide secure communication between sites using the AWS VPN CloudHub. 
 * Public IP cannot be assigned to instance with multiple ENIs.  
+* [AWS reserves](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#VPC_Sizing) the first 4 IPs and last IP in each subnet's CIDR block. 
 
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). It assumes deny first, and then  evaluates deny then evaluate allow. 
