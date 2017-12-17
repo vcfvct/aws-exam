@@ -87,7 +87,8 @@
 * Data stored on EBS volumes is automatically and redundantly stored in multiple physical volumes in the same availability zone as part of the normal operations of the EBS service at no additional charge.
 * Provisioned IOPS must be 4G-16Tb, 4G-16Tb   at most 50:1 (5000IOPS: 100G) or 640GB up with 32000 IOPS . 
 * use `dd`(disk duplicator) command to [prewarm the volume](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/disk-performance.html). Prewarm are not needed for new volumes, only for volumes restored from snapshot.
-* Recommended queue length is 1 per 200 IOPS.
+* Recommended queue length is 1 per 200 IOPS. 
+* IOPS is measured at 256KB or less as one for SSD and 1024KB for HDD. When small I/O operations are physically contiguous, Amazon EBS attempts to merge them into a single I/O up to the maximum size. For example, for SSD volumes, a single 1,024 KiB I/O operation counts as 4 operations (1,024÷256=4), while 8 contiguous I/O operations at 32 KiB each count as 1operation (8×32=256). However, 8 random I/O operations at 32 KiB each count as 8 operations. Each I/O operation under 32 KiB counts as 1 operation. 
 * RAID 5 and RAID 6 are not recommended for Amazon EBS because the parity write operations of these RAID modes consume some of the IOPS available to your volumes
 
 ## AWS storage gateway
