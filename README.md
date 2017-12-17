@@ -226,6 +226,7 @@
 * object expires in 24hr by default and minimum is 3600s (one hour). You can change the CloudFront settings for Minimum TTL, Maximum TTL, and Default TTL for a cache behavior. 
 * invalidate has 3000 object per distribution one time.  
 * Create an Origin Access Identity (OAI) for CloudFront and grant access to the objects in your S3 bucket to that OAI and create signed url using java/perl etc... 
+* Geo restriction: can be white/black list.
 
 ## Cloudformation
 * The **required** `Resources` section declares the AWS resources that you want to include in the stack, such as an Amazon EC2 instance or an Amazon S3 bucket.
@@ -238,8 +239,8 @@
 ## Cloudwatch
 * basic metric every 5 min, and detailed metrics every 1 min. NOTE: no detail support for service other than `RDS/EC2/ASG/ELB/R53`, and ASG is detail by default
 * basic ec2 monitoring: cpu, disk, status, network. Memory usage is customise metrics.
-* system status check is for Host(phiscal), to fix, start and stop the instance so it runs in a new physical host. And Instance status check is for VM, to fix, reboot/modify OS. . 
-* cloudwatch file can store logs up to 15 month. 
+* system status check is for Host(phiscal), to fix, start and stop the instance so it runs in a new physical host. And Instance status check is for VM, to fix, reboot/modify OS.
+* cloudwatch file can store logs up to 15 month.
 * EBS Volume status check, warning(degraded but still functioning), impaired(stalled/Not Available).
 * elasticCache, eviction monitoring(redis can only scale out, memcached can out/up). Concurrency monitoring
 * `mon-disable-alarm-actions` to disable all actions for the specific alarms. `mon-set-alarm-state` command to temporarily changes the alarm state of the specified alarm, `ALARM, OK or INSUFFICIENT_DATA`. 
@@ -267,6 +268,14 @@
 ## Data pipeline
 * By default, an activity retries three times before entering a hard failure state. You can increase the number of automatic retries to 10
 
+## Kinesis
+* Data in Kinesis is stored for 24 hours by default and up to 7 days if required. 
+* Shard is a measure of capacity, 1000 PUT(PutRecord[s] call) per second. 1MB/s input and 2MB/s output. Specified when steam is created and can be changed dynamically. 
+  * partition key tells which shard the data belongs to, specified by applications that putting data into a stream. 
+  * the `sequence number` is assinged by Streams after the putRecord[s] call.  
+  * data blob is 1MB.
+* You may use Kinesis Streams if you want to do some custom processing with streaming data. With Kinesis Firehose you are simply ingesting it into S3, Redshift or ElasticSearch
+
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
 * AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots
@@ -278,3 +287,4 @@
 * The maximum size of a tag key is 128 unicode characters.
 * Arn format: arn:partition:service:region:account-id:resource-type(/or:)resource. Some resource type does not require region/account-id, so those part will be omitted and show as double/triple colon. 
 * By default, temporary security credentials for an IAM user are valid for a maximum of 12 hours, but you can request a duration as short as 15 minutes or as long as 36 hours. For security reasons, a token for an AWS account root user is restricted to a duration of one hour.
+* You must create a virtual interface to begin using your AWS Direct Connect connection. You can create a private virtual interface to connect to your VPC, or you can create a public virtual interface to connect to AWS services that aren't in a VPC, such as Amazon S3 and Amazon Glacier. 
