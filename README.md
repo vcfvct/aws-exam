@@ -207,11 +207,13 @@
 * One subnet can only associate with one network ACL. We need to add [Ephemeral port](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html#VPC_ACLs_Ephemeral_Ports) to the allow list if client init traffic. 
 * vpc log flow allow log all traffic to the vpc into the cloudwatch. 
 * vpc peering does not support *edge-to-edge* routing, so settings on vpc-a cannot be shared by vpc-b even they are peered. 
-* vpn connection between on-prem and vpc requires Hardware VPN Access, on-prem Customer Gateway and a Virtual Private Gateway. 
 * VPC allows the user to set up a connection between his VPC and corporate or home network data centre `without` IP rage overlapping. 
 * If you have multiple VPN connections, you can provide secure communication between sites using the AWS VPN CloudHub. 
 * Public IP cannot be assigned to instance with multiple ENIs.  
 * [AWS reserves](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#VPC_Sizing) the first 4 IPs and last IP in each subnet's CIDR block. 
+* vpn connection between on-prem and vpc requires Hardware VPN Access, on-prem Customer Gateway and a Virtual Private Gateway. 
+  * A customer gateway is a physical device or software application on your side of the VPN connection.
+  * A virtual private gateway is the VPN concentrator on the Amazon side of the VPN connection. If you've attached a virtual private gateway to your VPC and enabled route propagation on your route table, routes representing your VPN connection automatically appear as propagated routes in your route table
 
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). It assumes deny first, and then  evaluates deny then evaluate allow. 
