@@ -143,6 +143,7 @@
 * Security policy is a combination of SSL protocols(TSL 1.0/1.1/1.2 SSL 2.0/3.0), SSL ciphers and the Server Order Preference option. 
 * Elastic Load Balancer allows using a Predefined Security Policies or creating a Custom Security Policy for specific needs. If none is specified, ELB selects the `latest` Predefined Security Policy.
 * When you register an instance with an elastic network interface (ENI) attached, the load balancer routes traffic to the primary IP address of the **iprimary** interface (eth0) of the instance.
+* ELB supports Proxy Protocol which user could identify client IP for TCP traffic.
 
 ## RDS
 * auto backup, stored in S3. Might be slightly delay/latency during backup. 
@@ -269,6 +270,7 @@
 * an EC2 instance need to be deployed in the same subnet as the HSM to serve as control instance, and a SG with port 22/3389(SSH/RDP) open to your network.  
 
 ## Data pipeline
+* AWS Data Pipeline is a web service that helps you reliably process and move data between different AWS compute and storage services, as well as on-premises data sources, at specified intervals.
 * By default, an activity retries three times before entering a hard failure state. You can increase the number of automatic retries to 10
 
 ## Kinesis
