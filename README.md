@@ -215,6 +215,7 @@
 * vpn connection between on-prem and vpc requires Hardware VPN Access, on-prem Customer Gateway and a Virtual Private Gateway. 
   * A customer gateway is a physical device or software application on your side of the VPN connection. A CG or route in CG is usually a single point of failure and need redundancy. 
   * A virtual private gateway is the VPN concentrator on the Amazon side of the VPN connection. If you've attached a virtual private gateway to your VPC and enabled route propagation on your route table, routes representing your VPN connection automatically appear as propagated routes in your route table
+  * each [vpn connection](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_VPN.html#VPNTunnels) has 2 tunnels, with each tunnel using a virtual private gateway public IP address. By adding another CG, we can provide 2 vpn connections and 4 tunnels for redundancy. The customer gateway IP address for the 2nd vpn connection must be publicly accessible.  
 
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). It assumes deny first, and then  evaluates deny then evaluate allow. 
