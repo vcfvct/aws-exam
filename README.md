@@ -213,7 +213,7 @@
 * Public IP cannot be assigned to instance with multiple ENIs.  
 * [AWS reserves](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Subnets.html#VPC_Sizing) the first 4 IPs and last IP in each subnet's CIDR block. 
 * vpn connection between on-prem and vpc requires Hardware VPN Access, on-prem Customer Gateway and a Virtual Private Gateway. 
-  * A customer gateway is a physical device or software application on your side of the VPN connection.
+  * A customer gateway is a physical device or software application on your side of the VPN connection. A CG or route in CG is usually a single point of failure and need redundancy. 
   * A virtual private gateway is the VPN concentrator on the Amazon side of the VPN connection. If you've attached a virtual private gateway to your VPC and enabled route propagation on your route table, routes representing your VPN connection automatically appear as propagated routes in your route table
 
 ## IAM
