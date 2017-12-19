@@ -243,6 +243,7 @@
 * The optional `Outputs` section declares output values that you can import into other stacks (to create cross-stack references), return in response (to describe stack calls), or view on the AWS CloudFormation console. 
 * limit: 200 stacks, 60 param and outputs in a single template, 4096 chars for description fields. 
 * AWS CloudFormation provides a `WaitCondition` resource which acts as a barrier and blocks the creation of other resources until a completion signal is received from an external source
+* Deletion Policy has 3 options: Delete, Retain, Snapshot.
 
 ## Cloudwatch
 * basic metric every 5 min, and detailed metrics every 1 min. NOTE: no detail support for service other than `RDS/EC2/ASG/ELB/R53`, and ASG is detail by default
