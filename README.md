@@ -297,6 +297,6 @@
 * Arn format: arn:partition:service:region:account-id:resource-type(/or:)resource. Some resource type does not require region/account-id, so those part will be omitted and show as double/triple colon. 
 * By default, temporary security credentials for an IAM user are valid for a maximum of 12 hours, but you can request a duration as short as 15 minutes or as long as 36 hours. For security reasons, a token for an AWS account root user is restricted to a duration of one hour.
 * You must create a virtual interface to begin using your AWS Direct Connect connection. You can create a private virtual interface to connect to your VPC, or you can create a public virtual interface to connect to AWS services that aren't in a VPC, such as Amazon S3 and Amazon Glacier. 
-* global vs region vs AZ
+* [global vs region vs AZ](http://jayendrapatil.com/tag/regional/)
   ![global vs region vs AZ](/images/AWS-Global-vs-Regional-vs-AZs.png?raw=true "AWS-Global-vs-Regional-vs-AZs")
 
