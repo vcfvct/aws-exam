@@ -156,7 +156,8 @@
   * auto scale from 10G to 64TB. 2 copies in each AZ and minimum in 3 AZ, so 6 copies. 
 * backup retention period, 1(default) to 35 days. 	 
 * user can view error log, slow query log and general log.
-* min IOPS 1000, min storage for IOPS 100G
+* Min IOPS 1000, min storage for IOPS 100G.
+* RDS can have cross-region read replica. 
 
 ## dynamo
 * eventual vs read consistency(auto copy to 3 AZs). 
@@ -171,6 +172,7 @@
 * DynamoDB uses optimistic concurrency control, and support conditional write
 * number of tables and provisioned thruput can be raised by contacting aws support
 * You can define a maximum of 5 local secondary indexes and 5 global secondary indexes per table.
+  * GSI(Global Secondary Index) is sparse indexes. Unlike the requirement of having a primary key, an item in a DynamoDB table does not have to contain any of the GSI keys. If a GSI key has both hash and range elements, and a table item omits either of them, then that item will not be indexed by the corresponding GSI. In such cases, a GSI can be very useful in efficiently locating items that have an uncommon attribute.
 * `scan` operation has a limit of 1MB, use LastEvaluatdKey to apply in a subsequent operation. The thruput is 4KB. 
 
 
@@ -216,6 +218,7 @@
   * A customer gateway is a physical device or software application on your side of the VPN connection. A CG or route in CG is usually a single point of failure and need redundancy. 
   * A virtual private gateway is the VPN concentrator on the Amazon side of the VPN connection. If you've attached a virtual private gateway to your VPC and enabled route propagation on your route table, routes representing your VPN connection automatically appear as propagated routes in your route table
   * each [vpn connection](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_VPN.html#VPNTunnels) has 2 tunnels, with each tunnel using a virtual private gateway public IP address. By adding another CG, we can provide 2 vpn connections and 4 tunnels for redundancy. The customer gateway IP address for the 2nd vpn connection must be publicly accessible.  
+  * VGW is not the initiator; CGW must initiate the tunnels
 
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). It assumes deny first, and then  evaluates deny then evaluate allow. 
@@ -294,3 +297,6 @@
 * Arn format: arn:partition:service:region:account-id:resource-type(/or:)resource. Some resource type does not require region/account-id, so those part will be omitted and show as double/triple colon. 
 * By default, temporary security credentials for an IAM user are valid for a maximum of 12 hours, but you can request a duration as short as 15 minutes or as long as 36 hours. For security reasons, a token for an AWS account root user is restricted to a duration of one hour.
 * You must create a virtual interface to begin using your AWS Direct Connect connection. You can create a private virtual interface to connect to your VPC, or you can create a public virtual interface to connect to AWS services that aren't in a VPC, such as Amazon S3 and Amazon Glacier. 
+* global vs region vs AZ
+  ![global vs region vs AZ](/images/AWS-Global-vs-Regional-vs-AZs.png?raw=true "AWS-Global-vs-Regional-vs-AZs")
+
