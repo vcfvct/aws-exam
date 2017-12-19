@@ -235,6 +235,7 @@
 * invalidate has 3000 object per distribution one time.  
 * Create an Origin Access Identity (OAI) for CloudFront and grant access to the objects in your S3 bucket to that OAI and create signed url using java/perl etc... 
 * Geo restriction: can be white/black list.
+* If CloudFront forwards a request to the origin using the HTTPS protocol, and if the origin server returns an invalid certificate or a self-signed certificate, CloudFront drops the TCP connection.
 
 ## Cloudformation
 * The **required** `Resources` section declares the AWS resources that you want to include in the stack, such as an Amazon EC2 instance or an Amazon S3 bucket.
