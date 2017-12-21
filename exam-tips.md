@@ -1,4 +1,4 @@
-*** dynamo questions
+dynamo questions
 limits with DynamoDB and S3. 
 
 SQS
@@ -23,3 +23,5 @@ http://docs.aws.amazon.com/IAM/latest/UserGuide/idcredentials_temp.html
 * http://vceguide.com/amazon/aws-sysops-aws-certified-sysops-administrator/
 ### SAP
 * http://www.briefmenow.org/amazon/category/exam-aws-sap-update-june-4th-2017/
+### DevOps Pro
+* http://getyouralgorithm.blogspot.com/2017/11/study-based-exam-notes-and-study-plan.html
