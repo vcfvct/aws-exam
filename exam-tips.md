@@ -25,3 +25,4 @@ http://docs.aws.amazon.com/IAM/latest/UserGuide/idcredentials_temp.html
 * http://www.briefmenow.org/amazon/category/exam-aws-sap-update-june-4th-2017/
 ### DevOps Pro
 * http://getyouralgorithm.blogspot.com/2017/11/study-based-exam-notes-and-study-plan.html
+* https://drive.google.com/drive/folders/0B-ob6L_QjGLpblF1NzNWWjFiRGc
