@@ -258,6 +258,7 @@
 * use `statistic-values` parameter for **put-metric-data** when sending aggregate data.  8KB for HTTP GET requests and 40KB for HTTP POST requests
 * data can be 2 weeks in the past and 2 hours into the future.
 * CloudWatch supports Sum, Min,Max, Sample Data and Average statistics aggregation.
+* Log -> CloudWatch Log -> Cloudwatch log filter -> cloudwatch alarm. We can config cw agent in EC2 and send logs to cw log, then we can establish cw log filter to get certain logs and build graph, then we can create criteria so if that is passed, we send alarm.
 
 ## DR
 * large RTO/RPO to small: 
