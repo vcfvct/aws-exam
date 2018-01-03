@@ -105,6 +105,7 @@
   * `ReceiveMessageWaitTimeSeconds` is an attribute of queue, and `WaitTimeSeconds` is a parameter when doing ReceiveMessage call. WaitTimeSeconds has higher priority. 
 * A FIFO SQS queue will end with the `.fifo` suffix.
 * The queue can be deleted by aws if inactive for [30 day](https://forums.aws.amazon.com/ann.jspa?annID=2532). 
+* You can manage Amazon SQS messages with Amazon S3. This is especially useful for storing and consuming messages with a message size of up to 2 GB. To manage Amazon SQS messages with Amazon S3, use the Amazon SQS Extended Client Library for Java
 
 ## SNS
 * Fully Managed Push message service. (email/sms/email)  
@@ -253,12 +254,14 @@
 * cloudwatch file can store logs up to 15 month.
 * EBS Volume status check, warning(degraded but still functioning), impaired(stalled/Not Available).
 * elasticCache, eviction monitoring(redis can only scale out, memcached can out/up). Concurrency monitoring
-* `mon-disable-alarm-actions` to disable all actions for the specific alarms. `mon-set-alarm-state` command to temporarily changes the alarm state of the specified alarm, `ALARM, OK or INSUFFICIENT_DATA`. 
 * when sending data to metrics, if no data in some period, it is still recommended to send `0` instead of no value to monitor the health of the application
 * use `statistic-values` parameter for **put-metric-data** when sending aggregate data.  8KB for HTTP GET requests and 40KB for HTTP POST requests
 * data can be 2 weeks in the past and 2 hours into the future.
 * CloudWatch supports Sum, Min,Max, Sample Data and Average statistics aggregation.
 * Log -> CloudWatch Log -> Cloudwatch log filter -> cloudwatch alarm. We can config cw agent in EC2 and send logs to cw log, then we can establish cw log filter to get certain logs and build graph, then we can create criteria so if that is passed, we send alarm.
+* cw alarm are sent to SNS or ASG. Alarm will only sent when state changes. 
+  * `mon-disable-alarm-actions` to disable all actions for the specific alarms. 
+  * `mon-set-alarm-state` command to temporarily changes the alarm state of the specified alarm, `ALARM, OK or INSUFFICIENT_DATA`. 
 
 ## DR
 * large RTO/RPO to small: 
@@ -284,9 +287,17 @@
 * Data in Kinesis is stored for 24 hours by default and up to 7 days if required. 
 * Shard is a measure of capacity, 1000 PUT(PutRecord[s] call) per second. 1MB/s input and 2MB/s output. Specified when steam is created and can be changed dynamically. 
   * partition key tells which shard the data belongs to, specified by applications that putting data into a stream. 
-  * the `sequence number` is assinged by Streams after the putRecord[s] call.  
+  * the `sequence number` is assigned by Streams after the putRecord[s] call.  
   * data blob is 1MB.
 * You may use Kinesis Streams if you want to do some custom processing with streaming data. With Kinesis Firehose you are simply ingesting it into S3, Redshift or ElasticSearch
+
+## OpsWorks
+* chef agent + OpsWorks automation engine.  Stack -> Layer -> instance
+* An RDS instance can only be associated with one OpsWorks stack. A `stack clone` operation does NOT copy an existing RDS instance.
+* life cycle events: setup, configure(execute when instance online/offline on all instances), deploy, undeploy, shutdown.
+* `create-deployment` command. 
+* `berkshelf` added from chef 11.10 to allow cookbooks from multiple repositories.
+* `Databags` are global json objects accessible from within the Chef framework. Can be searched.
 
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
