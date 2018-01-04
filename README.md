@@ -246,6 +246,10 @@
 * limit: 200 stacks, 60 param and outputs in a single template, 4096 chars for description fields. 
 * AWS CloudFormation provides a `WaitCondition` resource which acts as a barrier and blocks the creation of other resources until a completion signal is received from an external source
 * Deletion Policy has 3 options: Delete, Retain, Snapshot.
+* To get the status of a stack
+  * for automation script, poll with the cli `list-stacks`. 
+  * for IFTTT systems like cicd system, use the `–notification-arns ` option for `create-stack` to pass message to a sns topic. 
+* [custom resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) can be used to communicate with other system and get info back or create other resources, via SNS or lambda. 
 
 ## Cloudwatch
 * basic metric every 5 min, and detailed metrics every 1 min. NOTE: no detail support for service other than `RDS/EC2/ASG/ELB/R53`, and ASG is detail by default
