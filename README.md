@@ -303,6 +303,10 @@
 * `berkshelf` added from chef 11.10 to allow cookbooks from multiple repositories.
 * `Databags` are global json objects accessible from within the Chef framework. Can be searched.
 
+## lambda
+* lambda currently have a 1000 concurrent limit on account per region. 
+* each lambda container can only handle one request at a time. It only starts to serve other requests [after it frees up](https://stackoverflow.com/questions/45780776/how-does-aws-lambda-serve-multiple-requests). 
+
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
 * AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots
