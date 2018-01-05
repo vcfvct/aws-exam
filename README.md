@@ -7,6 +7,11 @@
 * We can use `as-setinstance-health` command from CLI to manually set an instance back to health, Auto Scaling will throw an error if the instance is already terminating or else it will mark it healthy
 * if an ASG failed to launch an single instance for more than 20 hours, it will suspend the scaling process.
 * AZ-rebalance will try to launch new instance then terminate old one, so if termination is suspended by user, ASG could grow up to 10% larger than its max size because ASG allow this temporarily during rebalancing activities
+* ASG lifecycle hooks
+  * You can use Amazon CloudWatch Events, Amazon SNS, or Amazon SQS to receive the notifications when the instance enters a wait state. 
+  * default wait time is one hour. The maximum amount of time that you can keep an instance in a wait state is 48 hours or 100 times the heartbeat timeout, whichever is smaller.
+  * At the conclusion of a lifecycle hook, the result is either ABANDON or CONTINUE.
+  * cooldowns or health check grace period starts after the lifecycle hook complete. 
 
 ## ECS(EC2 Container Service)
 * clusters can only scale in a single region.
