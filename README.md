@@ -180,6 +180,7 @@
 * You can define a maximum of 5 local secondary indexes and 5 global secondary indexes per table.
   * GSI(Global Secondary Index) is sparse indexes. Unlike the requirement of having a primary key, an item in a DynamoDB table does not have to contain any of the GSI keys. If a GSI key has both hash and range elements, and a table item omits either of them, then that item will not be indexed by the corresponding GSI. In such cases, a GSI can be very useful in efficiently locating items that have an uncommon attribute.
 * `scan` operation has a limit of 1MB, use LastEvaluatdKey to apply in a subsequent operation. The thruput is 4KB. 
+* dynamoDB stream is useful for replication and trigger. 4 Types of Stream view: (key only, new/old image, new&old image) 
 
 
 ## redshift
