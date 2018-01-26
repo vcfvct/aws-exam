@@ -257,6 +257,7 @@
   * for automation script, poll with the cli `list-stacks`. 
   * for IFTTT systems like cicd system, use the `–notification-arns ` option for `create-stack` to pass message to a sns topic. 
 * [custom resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) can be used to communicate with other system and get info back or create other resources, via SNS or lambda. 
+* To run commands on instance at launch, leverage [User Data](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) with 2 options: shell script or cloud-init directives. In cloudformation template, it can be [passed](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html#deployment-walkthrough-lamp-install) with the `Fn::Base64`.
 
 ## Cloudwatch
 * basic metric every 5 min, and detailed metrics every 1 min. NOTE: no detail support for service other than `RDS/EC2/ASG/ELB/R53`, and ASG is detail by default
