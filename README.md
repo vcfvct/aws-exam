@@ -111,6 +111,7 @@
 * A FIFO SQS queue will end with the `.fifo` suffix.
 * The queue can be deleted by aws if inactive for [30 day](https://forums.aws.amazon.com/ann.jspa?annID=2532). 
 * You can manage Amazon SQS messages with Amazon S3. This is especially useful for storing and consuming messages with a message size of up to 2 GB. To manage Amazon SQS messages with Amazon S3, use the Amazon SQS Extended Client Library for Java
+* use `backlog per instance` metric to auto scale ec2s. 
 
 ## SNS
 * Fully Managed Push message service. (email/sms/email)  
