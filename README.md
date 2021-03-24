@@ -12,6 +12,7 @@
   * default wait time is one hour. The maximum amount of time that you can keep an instance in a wait state is 48 hours or 100 times the heartbeat timeout, whichever is smaller.
   * At the conclusion of a lifecycle hook, the result is either ABANDON or CONTINUE.
   * cooldowns or health check grace period starts after the lifecycle hook complete. 
+* with `Default Termination Policy`, during scale-in, the instance launched from the `oldest` launch configuration.
 
 ## ECS(EC2 Container Service)
 * clusters can only scale in a single region.
@@ -151,6 +152,7 @@
 * Elastic Load Balancer allows using a Predefined Security Policies or creating a Custom Security Policy for specific needs. If none is specified, ELB selects the `latest` Predefined Security Policy.
 * When you register an instance with an elastic network interface (ENI) attached, the load balancer routes traffic to the primary IP address of the **iprimary** interface (eth0) of the instance.
 * ELB supports Proxy Protocol which user could identify client IP for TCP traffic.
+* ALB on 7th layer, NLB on 4th layer(tcp), GLB(gateway load balancer) on 3rd layer(IP).
 
 ## RDS
 * auto backup, stored in S3. Might be slightly delay/latency during backup. 
