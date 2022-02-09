@@ -13,6 +13,7 @@
   * At the conclusion of a lifecycle hook, the result is either ABANDON or CONTINUE.
   * cooldowns or health check grace period starts after the lifecycle hook complete. 
 * with `Default Termination Policy`, during scale-in, the instance launched from the `oldest` launch configuration.
+* Instances in standby state are still managed by Auto Scaling, are charged as normal, and do not count towards available EC2 instance for workload/application use. Auto scaling does not perform health checks on instances in the standby state. Standby state can be used for performing updates/changes/`troubleshooting` etc.
 
 ## ECS(EC2 Container Service)
 * clusters can only scale in a single region.
@@ -32,6 +33,7 @@
 * job queue -> scheduled jobs are placed into a job queue until they run. 
 * job scheduling -> takes care of when a job should be run and from which Env, typically FIFO. 
 * compute env -> ecs or unmanaged Env(managed/maintain ourself). 
+* An multi-node parallel job is compatible with any framework that supports IP-based, internode communication, such as Apache MXNet, TensorFlow, Caffe2, or Message Passing Interface (MPI).
 
 ## Lightsail
 * a Virtual Private Server backed by aws. Resembles EC2 but simpler and easier, good for small scale use cases.
@@ -85,10 +87,11 @@
 * add `x-amz-website-redirect-location` for website/page redirect. 
 * in a versioned bucket, Only the **bucket owner** can delete a specified object version.
 * `S3 Transfer Acceleration` is especially useful in cases where your bucket resides in a Region other than the one in which the file transfer was originated.
+* Athena is able to query encrypted data in S3
 
 ## EBS
 * snapshot store data on volumes in S3 which is replicated to multiple AZs. EBS volumes are replicated within a specific AZ, snapshots are tied to the region. Snapshots can be shared across regions. Snapshots are incremental and asynchronous. 
-* HDD[thruput optimized(ETL etc...) or cold], SSD, Magnetic volumes 
+* HDD[thruput optimized(ETL etc...) or cold], SSD, Magnetic volumes(cold/thruput-optimized HDD do NOT provide SLA for IOPS)
 * max volume **16TB**, max volume 5000, max snapshot 10000.
 * Data stored on EBS volumes is automatically and redundantly stored in multiple physical volumes in the same availability zone as part of the normal operations of the EBS service at no additional charge.
 * Provisioned IOPS must be 4G-16Tb, 4G-16Tb   at most 50:1 (5000IOPS: 100G) or 640GB up with 32000 IOPS . 
@@ -100,6 +103,10 @@
 ## AWS storage gateway
 * a hybrid storage service that enables your on-premises applications to seamlessly use AWS cloud storage.
 * It could run on premise as a  virtual appliance that can be used to cache S3 locally at a customers site.
+* volume gateway for block-based storage(iSCSI) and file gateway for file-based storage like (NFS)
+
+## FSx
+* SMB is for windows and NFS is for linux
 
 ## SQS
 * default visibility timeout 30s. Max 12 hours.  
@@ -145,6 +152,7 @@
 * When the user gets an `InsufficientInstanceCapacity` error while launching or starting an EC2 instance, it means that AWS does not currently have enough available capacity to service the user request
 * every stop/start will be charged an extra hour, while reboot does not charge. 
 * Shared <-> Dedicated are concepts for hardware. Reserved, On-Demand, Spot are for pricing and usage mode. For Dedicated tenancy, reserved instances is also possible.
+  * the `Spot Block` is good for tasks that does not run regularly each day and within 6 hours.
 
 ## ELB
 * The ELB  `X-Forwarded-For` request header helps you identify the IP address of a client when you use HTTP/HTTPS load balancer.
@@ -192,6 +200,7 @@
 * column based, advanced compression, only avail in 1 AZ
 * default block size for columnar storage is 1M, which is more efficient and further reduces the number of I/O requests needed to perform any database loading or other operations that are part of query execution.
 * Auto backup. 
+* RedShift can also improve performance for repeat queries by `caching` the result and returning the cached result when queries are re-run. Dashboard, visualization, and business intelligence (BI) tools that execute repeat queries see a significant boost in performance due to result caching.
 
 ## elasticache
 * improve latency and thruput of read heavy.
@@ -230,6 +239,8 @@
   * A virtual private gateway is the VPN concentrator on the Amazon side of the VPN connection. If you've attached a virtual private gateway to your VPC and enabled route propagation on your route table, routes representing your VPN connection automatically appear as propagated routes in your route table
   * each [vpn connection](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_VPN.html#VPNTunnels) has 2 tunnels, with each tunnel using a virtual private gateway public IP address. By adding another CG, we can provide 2 vpn connections and 4 tunnels for redundancy. The customer gateway IP address for the 2nd vpn connection must be publicly accessible.  
   * VGW is not the initiator; CGW must initiate the tunnels
+* You can build a hub-and-spoke topology with AWS `Transit Gateway` that supports transitive routing. This simplifies the network topology and adds additional features over VPC peering. The restriction is VPCs must be in the same region, otherwise use the `Direct Connect Gateway` associated with Virtual Private Gateway.
+* An `Interface endpoint `uses AWS *PrivateLink* and is an elastic network interface (ENI) with a private IP address that serves as an entry point for traffic destined to a supported service. 
 
 ## IAM
 * [IAM Policy Evaluation Logic](http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow). It assumes deny first, and then  evaluates deny then evaluate allow. 
@@ -261,6 +272,7 @@
   * for IFTTT systems like cicd system, use the `–notification-arns ` option for `create-stack` to pass message to a sns topic. 
 * [custom resource](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources.html) can be used to communicate with other system and get info back or create other resources, via SNS or lambda. 
 * To run commands on instance at launch, leverage [User Data](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) with 2 options: shell script or cloud-init directives. In cloudformation template, it can be [passed](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/deploying.applications.html#deployment-walkthrough-lamp-install) with the `Fn::Base64`.
+* AWS CloudFormation provides two methods for updating stacks: direct update or creating and executing change sets(preview and decide). 
 
 ## Cloudwatch
 * basic metric every 5 min, and detailed metrics every 1 min. NOTE: no detail support for service other than `RDS/EC2/ASG/ELB/R53`, and ASG is detail by default
@@ -277,10 +289,12 @@
 * cw alarm are sent to SNS or ASG. Alarm will only sent when state changes. 
   * `mon-disable-alarm-actions` to disable all actions for the specific alarms. 
   * `mon-set-alarm-state` command to temporarily changes the alarm state of the specified alarm, `ALARM, OK or INSUFFICIENT_DATA`. 
+* A CloudWatch Events rule can be used to set up automatic email notifications for Medium to High Severity findings to the email address of your choice. You simply create an Amazon SNS topic and then associate it with an Amazon CloudWatch events rule.
 
 ## DR
 * large RTO/RPO to small: 
   * backup&restore, backup data to S3/Glacier, and restore when DR. 
+    * glacier cannot be set up as destination, must go thru S3 first then lifecycle policy can transition from s3 to glacier
   * Pilot Light(RDS/AD replicated and elastic IP/ENI Or R53+ELB), 
   * Warm Standby, run a mini version live all the time. When DR, scale up/out 
   * Multi-Site. Active-active, both running at the same time. Still write to the main DB. Failover to backup db when DR.
@@ -320,12 +334,13 @@
 
 ## Misc
 * AWS support 2 `Virtualizations`: para and Hardware 
-* AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots
+* AWS Trusted Advisor: Security Groups - Specific Ports Unrestricted, IAM Use, MFA on Root Account, EBS Public Snapshots, RDS Public Snapshots, Service Limits check. 
 * large file transfer: snowball or aws-import/export 
 * storage gateway.
   * Gateway cached: storing all the data on s3 and cache frequently-used data locally.
   * Gateway stored: use s3 to backup the data but store locally.
 * Killing feature for EFS against EBS is its concurrency, it can be mounted/accessed by multiple ec2 instances at the same time. 
+  * EFS cannot be used with Windows Instance.
 * The maximum size of a tag key is 128 unicode characters.
 * Arn format: arn:partition:service:region:account-id:resource-type(/or:)resource. Some resource type does not require region/account-id, so those part will be omitted and show as double/triple colon. 
 * By default, temporary security credentials for an IAM user are valid for a maximum of 12 hours, but you can request a duration as short as 15 minutes or as long as 36 hours. For security reasons, a token for an AWS account root user is restricted to a duration of one hour.
