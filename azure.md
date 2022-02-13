@@ -32,5 +32,15 @@
 * Azure Container Instances -> ECS Fargate
 * AKS(k8s) + ACR(container registry)
 
+## Storage
+* Storage Account: Unique Azure namespace(Every Object in Azure has its own web address). The base of all Azure storage types.
+* `Storage Account` can have multiple `Containers` which in term contains multiple `Objects`. 
+  * The public url can be `https://{StorageAccountName}.blob.core.windows.net/{ContainerName}/{fileName}`.
+* Blob Types: Block(up to 4.7TB), Append(Logging), Page(up to 8TB, virtual Hard Drive)
+  * pricing: Hot/Cool/Archive
+* Disk Types: HDD, standard/premium SSD, Ultra Disk(up to 64TB, for data intensive)
+* File Storage use case: Hybrid, Lift and Shift.
+* Archive -> Glacier. A `Blob` tier so same tool will work.
+
 ##  misc
 * ResourceGroup can be shutdown any time as long as the resources are not subject to protection
