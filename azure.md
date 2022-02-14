@@ -42,5 +42,12 @@
 * File Storage use case: Hybrid, Lift and Shift.
 * Archive -> Glacier. A `Blob` tier so same tool will work.
 
+## Databases
+* CosmosDB: Global from start, single digit latency, pay for use. 
+  * cosmos `db account` (with free tier), specify global distribution, networking, backup, encryption etc
+  * cosmos db has an `id` and a `partition key`(a path to the json separated by `/`) and their combination has to be unique. We can use the same field for both. A [documentation on partition key choice](https://docs.microsoft.com/en-us/azure/cosmos-db/partitioning-overview#choose-partitionkey)
+* Azure SQL: managed SQL-Server, up to 100TB.
+* Managed MySQL/PostgreSQL and DMS
+
 ##  misc
 * ResourceGroup can be shutdown any time as long as the resources are not subject to protection
