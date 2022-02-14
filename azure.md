@@ -49,5 +49,13 @@
 * Azure SQL: managed SQL-Server, up to 100TB.
 * Managed MySQL/PostgreSQL and DMS
 
+## AuthN & AuthR
+* Azure Active Directory(AAD) 
+  * manage users and permissions.
+  * AAD is completely different from Active Directory. It is mandatory(cannot use Azure account without AAD service).
+  * Tenant and User(member of up to 500 tenants) are many to many.
+  * done with Group/Member/Role etc.
+
 ##  misc
 * ResourceGroup can be shutdown any time as long as the resources are not subject to protection
+* Serverless: Azure functions, App Logic(step functions?), EventGrid(-> EventBridge?)
