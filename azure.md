@@ -56,6 +56,13 @@
   * Tenant and User(member of up to 500 tenants) are many to many.
   * done with Group/Member/Role etc.
 
+## Security
+* Azure Security Center -> overall monitoring/scoring on security
+* Azure Key vault -> storing credentials and grant/revoke access. Similar to AWS Secret Manager.
+* Azure Information protection -> protect files like word/excel etc while sharing as email attachments etc.
+* Azure sentinel, collect/aggregate/analyze security issues automatically.
+* Defender for Identity(formerly Advanced Threat Protection) -> manage/monitor user behaviors in organization, and reporting.
+
 ##  misc
 * ResourceGroup can be shutdown any time as long as the resources are not subject to protection
 * Serverless: Azure functions, App Logic(step functions?), EventGrid(-> EventBridge?)
