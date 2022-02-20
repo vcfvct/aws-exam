@@ -63,6 +63,12 @@
 * Azure sentinel, collect/aggregate/analyze security issues automatically.
 * Defender for Identity(formerly Advanced Threat Protection) -> manage/monitor user behaviors in organization, and reporting.
 
+## Pricing
+* An account can have multiple subscriptions. Billing Admin and Management Group
+* data transferred within same `billing zone` is free.
+* Pricing calculator to help better estimation.
+
 ##  misc
 * ResourceGroup can be shutdown any time as long as the resources are not subject to protection
 * Serverless: Azure functions, App Logic(step functions?), EventGrid(-> EventBridge?)
+* BigData: DataLake analytics, Azure DataBricks(managed spark), HDInsight(hadoop/spark/kafka), Synapse Analytics(data warehouse) & Synapse SQL,
