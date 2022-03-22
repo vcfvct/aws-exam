@@ -41,6 +41,12 @@
 * Disk Types: HDD, standard/premium SSD, Ultra Disk(up to 64TB, for data intensive)
 * File Storage use case: Hybrid, Lift and Shift.
 * Archive -> Glacier. A `Blob` tier so same tool will work.
+* Azure Storage redundancy
+  * Locally-redundant storage, LRS (replicated in same data center)
+  * Zone-redundant storage, ZRS (replicated in different Data center within same AZ)
+  * Geo-redundant storage (GRS): primary region with LRS
+  * Geo-zone-redundant storage (GZRS): primary region with ZRS
+  * For *read* access to the secondary region, configure your storage account to use read-access geo-redundant storage (RA-GRS) or read-access geo-zone-redundant storage (RA-GZRS). 
 
 ## Databases
 * CosmosDB: Global from start, single digit latency, pay for use. 
