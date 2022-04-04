@@ -25,24 +25,22 @@
 * Virtual Network(VNet) -> VPC, in one region, with one subscription.
   * VNet peering with backbone network. Low Latency, Link Separate Network, Transfer data between subscriptions and deployment models in separate regions.
   * NSG can be associated with Subnet in either VNet or NSG UI.
+  * NSG can be associated to a *subnet or network interface*, recommendations is not to both as they could [conflict with each other](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works#intra-subnet-traffic).
 * Application Gateway -> ALB, Load Balancer -> ELB, 
 * CDN: [profile + endpoint](https://docs.microsoft.com/en-us/azure/cdn/cdn-create-new-endpoint). A cdn profile is a container for CDN endpoints and specifies a pricing tier. An endpoint is where we can specify origins/pat/path and other behaviors.
 * ExpressRoute -> DirectConnect. Connect to on-premises stuff with private connection instead of public Internet.
 * A Point-to-Site (P2S) VPN gateway connection lets you create a secure connection to your virtual network from an individual client computer.
 * A Site-to-Site (S2S) VPN gateway is good for Dev/test/ lab scenarios and small to medium scale production workloads for cloud services and virtual machines
-* A `Local Network Gateway` is an object in Azure that represents your on-premise VPN device. A `Virtual Network Gateway` is the VPN object at the Azure end of the
-* VPN. A `connection` is what connects the Local Network Gateway and the Virtual Network Gateway to bring up the VPN.
+* A `Local Network Gateway` is an object in Azure that represents your on-premise VPN device. A `Virtual Network Gateway` is the VPN object at the Azure end of the VPN. A `connection` is what connects the Local Network Gateway and the Virtual Network Gateway to bring up the VPN.
 * Not all Azure regions support availability zones.
-* A Network Security Group can be associated to a subnet or network interface, recommendations is not to both as they could [conflict with each other](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works#intra-subnet-traffic).
 
 ## Compute
 * Scale Sets -> ASG
 * App Services: PaaS with `Web Apps` for standard app or Containers or APIs, with different run time like node/php/.net etc.
-* Azure Container Instances -> ECS Fargate
+* `Azure Container Instances` -> Fargate: provide portable environments for virtualized applications. It can start containers in Azure in seconds, without the need to *provision and manage* VMs.
 * AKS(k8s) + ACR(container registry)
 * Azure DevTest Labs -> support windows/linux, quickly provision development and test environments, Set automated shutdowns to minimize costs
 * `Azure Databricks` is an Apache *Spark*-based analytics platform.
-* `Azure Container Instances` -> Fargate: provide portable environments for virtualized applications. It can start containers in Azure in seconds, without the need to *provision and manage* VMs.
 
 ## Storage
 * Blobs/Files/Queues(messages)/Tables(no-SQL)/Disks(Block-level).
@@ -51,9 +49,8 @@
   * The public url can be `https://{StorageAccountName}.blob.core.windows.net/{ContainerName}/{fileName}`.
 * Blob Types: Block(up to 4.7TB), Append(Logging), Page(up to 8TB, virtual Hard Drive)
   * pricing: Hot/Cool/Archive
+  * The `Cool Access` is for Short-term backup and disaster recovery. Archive Access is for long term backup.
 * Disk Types: HDD, standard/premium SSD, Ultra Disk(up to 64TB, for data intensive)
-* File Storage use case: Hybrid, Lift and Shift.
-* The `Cool Access` is for Short-term backup and disaster recovery. Archive Access is for long term backup.
 * Archive -> Glacier. A `Blob` tier so same tool will work. 
   * To read or download a blob in archive, you must first rehydrate it to an online tier.
 * Azure Storage redundancy
@@ -63,6 +60,7 @@
   * Geo-zone-redundant storage (GZRS): primary region with ZRS
   * For *read* access to the secondary region, configure your storage account to use read-access geo-redundant storage (RA-GRS) or read-access geo-zone-redundant storage (RA-GZRS). 
 * Azure Files -> AWS EFS, storage/sharing with NFS(Network File System) protocol.
+  * File Storage use case: Hybrid, Lift and Shift.
 * You can use Power BI to analyze and visualize data stored in `Azure Data Lake` and `Azure SQL Data Warehouse`.
 * `Azure containers` are the backbone of the *virtual disks* platform for Azure IaaS. Both Azure OS and data disks are implemented as virtual disks where data is durably persisted in the Azure Storage platform and then delivered to the *virtual machines* for maximum performance. Azure Disks are persisted in Hyper-V VHD format and stored as a page blob in Azure Storage.
 
@@ -130,4 +128,4 @@
 * Traditionally, IT expenses have been considered a [Capital Expenditure](https://tutorialsdojo.com/azure-capex-vs-opex/) (CapEx) like buying server etc. Today, with the move to the cloud and the pay-as-you-go model, organizations have the ability to stretch their budgets and are shifting their IT CapEx costs to Operating Expenditures (OpEx) instead. 
 * `Azure Site Recovery` helps ensure business continuity by keeping business apps and workloads running during outages. Site Recovery replicates workloads running on physical and virtual machines (VMs) from a primary site to a secondary location.
 * The `Azure Total Cost of Ownership`(TCO) Calculator is used to estimate the cost savings you can achieve by migrating your application workloads to Microsoft ..
-* Azure Cost Management is the process of effectively planning and controlling costs involved in your business. Customers with an Azure Enterprise Agreement(EA), Microsoft Customer Agreement(MCA), or Microsoft Partner Agreement(MPA) can use Azure Cost Management.
+* `Azure Cost Management` is the process of effectively planning and controlling costs involved in your business. Customers with an Azure Enterprise Agreement(EA), Microsoft Customer Agreement(MCA), or Microsoft Partner Agreement(MPA) can use Azure Cost Management.
