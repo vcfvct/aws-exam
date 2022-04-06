@@ -7,7 +7,7 @@
   * out -> increase count, non-interruptive
 * Elasticity: scale down when traffic/demand decreases.
 
-## cloudshell
+## CloudShell
 * available in powershell and  bash, no package installation allowed as `sudo` is not available.
 * `az` and other things like node/python are already there.
 
@@ -26,6 +26,10 @@
   * VNet peering with backbone network. Low Latency, Link Separate Network, Transfer data between subscriptions and deployment models in separate regions.
   * NSG can be associated with Subnet in either VNet or NSG UI.
   * NSG can be associated to a *subnet or network interface*, recommendations is not to both as they could [conflict with each other](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-group-how-it-works#intra-subnet-traffic).
+  * CLI: 
+    * `az deployment group create -g "YourResourcesGroupName" --template-file azuredeploy.json --parameters "alias=xxx"`
+    * `az network vnet show -g "<alias>-rg" -n "vnetName" --query addressSpace`. The `--query` is handy for using a [JMESPath query](https://jmespath.org/) to return specific properties rather than the full response object. This option is available on any command while using az CLI.
+    * `az network vnet subnet list -g "<alias>-rg" --vnet-name "vnetName" -o table`. The `-o` option enables you to interact with results in different formats (ex: JSON, table, tsv). It can be combined with the `--query` option even when the output is table instead of JSON.
 * Application Gateway -> ALB, Load Balancer -> ELB, 
 * CDN: [profile + endpoint](https://docs.microsoft.com/en-us/azure/cdn/cdn-create-new-endpoint). A cdn profile is a container for CDN endpoints and specifies a pricing tier. An endpoint is where we can specify origins/pat/path and other behaviors.
 * ExpressRoute -> DirectConnect. Connect to on-premises stuff with private connection instead of public Internet.
@@ -37,7 +41,7 @@
 ## Compute
 * Scale Sets -> ASG
 * App Services: PaaS with `Web Apps` for standard app or Containers or APIs, with different run time like node/php/.net etc.
-* `Azure Container Instances` -> Fargate: provide portable environments for virtualized applications. It can start containers in Azure in seconds, without the need to *provision and manage* VMs.
+* `Azure Container Instances` -> FarGate: provide portable environments for virtualized applications. It can start containers in Azure in seconds, without the need to *provision and manage* VMs.
 * AKS(k8s) + ACR(container registry)
 * Azure DevTest Labs -> support windows/linux, quickly provision development and test environments, Set automated shutdowns to minimize costs
 * `Azure Databricks` is an Apache *Spark*-based analytics platform.
@@ -94,10 +98,11 @@
 * Azure Security Center -> overall monitoring/scoring on security
   * The advanced monitoring capabilities in Security Center lets you track and manage *compliance and governance* over time. The overall compliance provides you with a measure of how much your subscriptions are compliant with policies associated with your workload.
 * Azure Key vault -> storing credentials and grant/revoke access. Similar to AWS Secret Manager.
+  * ps command: `Get-AzKeyVaultSecret -VaultName "keyvaultName"`
 * Azure Information protection -> protect files like word/excel etc while sharing as email attachments etc.
 * Azure sentinel, collect/aggregate/analyze security issues automatically.
 * Defender for Identity(formerly Advanced Threat Protection) -> manage/monitor user behaviors in organization, and reporting.
-* You can view list of compliance certifications(Azure has 90+ inlucding over 50 specific to global regions/countries) in the `Trust Center` to determine whether Azure meets your *regional requirements*.
+* You can view list of compliance certifications(Azure has 90+ including over 50 specific to global regions/countries) in the `Trust Center` to determine whether Azure meets your *regional requirements*.
 
 ## Pricing
 * An account can have multiple subscriptions. Billing Admin and Management Group
@@ -129,3 +134,4 @@
 * `Azure Site Recovery` helps ensure business continuity by keeping business apps and workloads running during outages. Site Recovery replicates workloads running on physical and virtual machines (VMs) from a primary site to a secondary location.
 * The `Azure Total Cost of Ownership`(TCO) Calculator is used to estimate the cost savings you can achieve by migrating your application workloads to Microsoft ..
 * `Azure Cost Management` is the process of effectively planning and controlling costs involved in your business. Customers with an Azure Enterprise Agreement(EA), Microsoft Customer Agreement(MCA), or Microsoft Partner Agreement(MPA) can use Azure Cost Management.
+* Traffic Manager -> Route53
