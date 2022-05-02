@@ -91,6 +91,15 @@
   * AAD is completely different from Active Directory. It is mandatory(cannot use Azure account without AAD service).
   * Tenant and User(member of up to 500 tenants) are many to many.
   * done with Group/Member/Role etc.
+* application objects and service principals, reference at [ms docs](https://docs.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals).
+  * The application object is the *global* representation of your application for use across all tenants, and the service principal is the *local* representation for use in a specific tenant. The application object serves as the template from which common and default properties are derived for use in creating corresponding service principal objects.
+  * An application object has:
+    * 1:1 relationship with the software application, and
+    * 1:many relationship with its corresponding service principal object(s).
+  * [service principal](https://identitydocs.azurewebsites.net/static/v2/Service-principal-provisioning/Overview-of-service-principal-provisioning.html) are AAD objects which represent your app in each customer's tenant. They define what the app can actually do in the specific tenant, who can access the app, and what resources the app can access.
+  * An `Azure AD application` is defined by its one and only `application object`, which resides in the Azure AD tenant where the application was registered (known as the application's "home" tenant). 
+  * An `application object` is used as a template or blueprint to create one or more `service principal` objects. The application object describes three aspects of an application: how the service can issue tokens in order to access the application, resources that the application might need to access, and the actions that the application can take. A `service principal` is created in *every* tenant where the application is used. Similar to a class in object-oriented programming, the application object has some static properties that are applied to all the created service principals (or application instances). The `application object` describes three aspects of an application: 1. how the service can issue tokens in order to access the application, 2. resources that the application might need to access, and 3. the actions that the application can take.
+  * The `security principal` defines the access policy and permissions for the user/application in the Azure AD tenant. This enables core features such as authentication of the user/application during sign-in, and authorization during resource access.
 
 ## Monitoring
 * `Azure Service Health` notifies you about Azure service incidents and planned maintenance so you can take action to mitigate downtime. Configure customizable cloud alerts and use your personalized dashboard to analyze health issues, monitor the impact to your cloud resources, get guidance and support, and share details and updates.
