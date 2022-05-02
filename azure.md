@@ -45,6 +45,8 @@
 * AKS(k8s) + ACR(container registry)
 * Azure DevTest Labs -> support windows/linux, quickly provision development and test environments, Set automated shutdowns to minimize costs
 * `Azure Databricks` is an Apache *Spark*-based analytics platform.
+* API-Management -> api-gateway.
+  * allow group apis into [products](https://github.com/Azure-Samples/Serverless-APIs/blob/main/readme/3%20-%20Products.md) for easier management like publish/unpublish, applying policies etc.
 
 ## Storage
 * Blobs/Files/Queues(messages)/Tables(no-SQL)/Disks(Block-level).
@@ -70,6 +72,7 @@
 
 ## Databases
 * CosmosDB: Global from start, single digit latency, pay for use. 
+  * max document size: `2MB`
   * cosmos `db account` (with free tier), specify global distribution, networking, backup, encryption etc
   * cosmos db has an `id` and a `partition key`(a path to the json separated by `/`) and their combination has to be unique. We can use the same field for both. A [documentation on partition key choice](https://docs.microsoft.com/en-us/azure/cosmos-db/partitioning-overview#choose-partitionkey)
   * CosmosDB automatically indexes every property for all items in the container/collection [without having to defining schema or secondary indexes](https://docs.microsoft.com/en-us/azure/cosmos-db/index-overview).
