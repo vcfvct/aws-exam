@@ -41,6 +41,12 @@
 ## Compute
 * Scale Sets -> ASG
 * App Services: PaaS with `Web Apps` for standard app or Containers or APIs, with different run time like node/php/.net etc.
+  * use `az webapp list-runtimes --os-type linux` to retrieve the current supported runtime list.
+  * multiple apps can be deployed to the same AppService Plan, they will scan together(all apps run on all instances each). Isolate the app into a new AppService Plan when app is resource intensive, or want to scale the app independently, or needs resource in a different geographical region.
+  * development slot: deploy app to a staging environment and swap staging and production slots when ready(Standard AppService Plan tier+). Traffic can be routed automatically or manually(by using `x-ms-routing-name` query parameter). After a client is routed to a specific slot, it is "pinned" to that slot for the life of that client session(due to the `x-ms-routing-name` cookie).
+  * `Application settings` under `Configuration` defines environment variables for the app.
+  * `general settings` under `Configuration` has some common settings like stack/runtime-version/tls etc.
+  * auto-scale by 1. metric(cpu/memory/disk-queue/http-queue/data-numberOfBytes in or out) min-duration 5 minutes or 2. schedule.
 * `Azure Container Instances` -> FarGate: provide portable environments for virtualized applications. It can start containers in Azure in seconds, without the need to *provision and manage* VMs.
 * AKS(k8s) + ACR(container registry)
 * Azure DevTest Labs -> support windows/linux, quickly provision development and test environments, Set automated shutdowns to minimize costs
