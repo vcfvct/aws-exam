@@ -144,9 +144,21 @@
 * `Azure Machine Learning designer` lets you visually connect datasets and modules on an interactive canvas to create machine learning models.
 * `Azure Bot Services` provides a digital online assistant that provides speech support. Bots provide an experience that feels less like using a computer and more like dealing with a person - or at least an intelligent robot. They can be used to shift simple, repetitive tasks, such as taking a dinner reservation or gathering profile information, on to automated systems that may no longer require direct human intervention. 
 
+## Serverless
+* Azure functions, App Logic(step functions?), EventGrid(-> EventBridge?)
+  * For Azure Functions, you develop orchestrations by writing code and using the Durable Functions extension. For Logic Apps, you create orchestrations by using a GUI or editing configuration files.
+* Azure function hosting plans
+  * *Consumption plan* 	This is the default hosting plan. It scales automatically and you only pay for compute resources when your functions are running. Instances of the Functions host are dynamically added and removed based on the number of incoming events.
+  * *Functions Premium plan* 	Automatically scales based on demand using pre-warmed workers which run applications with no delay after being idle, runs on more powerful instances, and connects to virtual networks. 
+  * *App service plan* 	Run your functions within an App Service plan at regular App Service plan rates. Best for long-running scenarios where Durable Functions can't be used.
+* Azure function scales [at the unit scale of 'functin app'](https://docs.microsoft.com/en-us/learn/modules/explore-azure-functions/4-scale-azure-functions).
+  * Maximum instances: A single function app only scales out to a maximum of 200 instances for Consumption plan and 100 for Premium plan. A single instance may process more than one message or request at a time though, so there isn't a set limit on number of concurrent executions. `functionAppScaleLimit` is the variable to tweak the number of instances, which can be set to 0 or *null* for unrestricted.
+  * New instance rate: For HTTP triggers, new instances are allocated, at most, once per second. For non-HTTP triggers, new instances are allocated, at most, once every 30 seconds. Scaling is faster when running in a Premium plan.
+  * Using an *App Service plan*, you can manually scale out by adding more VM instances. You can also enable autoscale, though autoscale will be slower than the elastic scale of the Premium plan.
+
+
 ##  misc
 * ResourceGroup can be shutdown any time as long as the resources are not subject to protection
-* Serverless: Azure functions, App Logic(step functions?), EventGrid(-> EventBridge?)
 * BigData: DataLake analytics, Azure DataBricks(managed spark), HDInsight(hadoop/spark/kafka), Synapse Analytics(data warehouse) & Synapse SQL,
 * Traditionally, IT expenses have been considered a [Capital Expenditure](https://tutorialsdojo.com/azure-capex-vs-opex/) (CapEx) like buying server etc. Today, with the move to the cloud and the pay-as-you-go model, organizations have the ability to stretch their budgets and are shifting their IT CapEx costs to Operating Expenditures (OpEx) instead. 
 * `Azure Site Recovery` helps ensure business continuity by keeping business apps and workloads running during outages. Site Recovery replicates workloads running on physical and virtual machines (VMs) from a primary site to a secondary location.
