@@ -63,14 +63,25 @@
   * pricing: Hot/Cool/Archive
   * The `Cool Access` is for Short-term backup and disaster recovery. Archive Access is for long term backup.
 * Disk Types: HDD, standard/premium SSD, Ultra Disk(up to 64TB, for data intensive)
+* Blob storage *access tiers*. it can be set on a blob during or after upload.
+  * Hot - Optimized for storing data that is accessed frequently.
+  * Cool - Optimized for storing data that is infrequently accessed and stored for at least 30 days. Data in the *cool* access tier has slightly *lower availability*, but still has high durability, retrieval latency, and throughput characteristics similar to hot data.
+  * Archive - Optimized for storing data that is rarely accessed and stored for at least 180 days with flexible latency requirements, on the order of hours. The archive access tier can only be set at the blob level, not the account level
+
 * Archive -> Glacier. A `Blob` tier so same tool will work. 
   * To read or download a blob in archive, you must first rehydrate it to an online tier.
+  * Data in the archive access tier is stored offline. The archive tier offers the lowest storage costs but also the highest access costs and latency.
+  * The archive tier supports only LRS, GRS, and RA-GRS redundancy options.
+  * When you rehydrate a blob, you can set the priority for the rehydration operation via the optional x-ms-rehydrate-priority header on a Set Blob Tier. Standard priority or High Priority.
 * Azure Storage redundancy
   * Locally-redundant storage, LRS (replicated in same data center)
   * Zone-redundant storage, ZRS (replicated in different Data center within same AZ)
   * Geo-redundant storage (GRS): primary region with LRS
   * Geo-zone-redundant storage (GZRS): primary region with ZRS
   * For *read* access to the secondary region, configure your storage account to use read-access geo-redundant storage (RA-GRS) or read-access geo-zone-redundant storage (RA-GZRS). 
+* Blob Storage life-cycle police: transition your data to the appropriate access tiers or expire at the end of the data's lifecycle.
+  * a collection of rules in JSON format, we can use type/prefix in *filter* sections and define *actions* to do things like `tierToCool/enableAutoTierToHotFromCool/tierToArchive/delete` etc with *conditions* like `daysAfterModificationGreaterThan/daysAfterCreationGreaterThan`. 
+  * can be updated via cli/ui/REST. In portal, it is under Storage Account -> Data Management -> Lifecycle Management.
 * Azure Files -> AWS EFS, storage/sharing with NFS(Network File System) protocol.
   * File Storage use case: Hybrid, Lift and Shift.
 * You can use Power BI to analyze and visualize data stored in `Azure Data Lake` and `Azure SQL Data Warehouse`.
