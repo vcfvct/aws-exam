@@ -87,6 +87,7 @@
     * Composite index(multiple fields)
 * Azure SQL: managed SQL-Server, up to 100TB.
 * Managed MySQL/PostgreSQL and DMS
+* Azure Table storage: Every entity stored in a table must have a unique combination of *PartitionKey* and *RowKey*. The Table service does not create any secondary indexes, so PartitionKey and RowKey are the only indexed properties.
 
 ## Messaging
 * Azure Event Hubs is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters.
@@ -155,6 +156,12 @@
   * Maximum instances: A single function app only scales out to a maximum of 200 instances for Consumption plan and 100 for Premium plan. A single instance may process more than one message or request at a time though, so there isn't a set limit on number of concurrent executions. `functionAppScaleLimit` is the variable to tweak the number of instances, which can be set to 0 or *null* for unrestricted.
   * New instance rate: For HTTP triggers, new instances are allocated, at most, once per second. For non-HTTP triggers, new instances are allocated, at most, once every 30 seconds. Scaling is faster when running in a Premium plan.
   * Using an *App Service plan*, you can manually scale out by adding more VM instances. You can also enable autoscale, though autoscale will be slower than the elastic scale of the Premium plan.
+* [Timer trigger](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer) configuration.
+* [Durable Functions](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview) is an extension of Azure Functions that lets you write stateful functions in a serverless compute environment. The extension lets you define stateful workflows by writing [orchestrator functions](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-orchestrations) and [stateful entities](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-entities) by writing entity functions using the Azure Functions programming model. Behind the scenes, the extension manages state, checkpoints, and restarts for you, allowing you to focus on your business logic.
+  * Durable Functions is good for function-chain/fan-in-out/async-api/monitoring/human-interaction/aggregation etc.
+  * [billing](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-billing) is the same way as normal Functions.
+  * [Durable Entities](https://markheath.net/post/durable-entities-what-are-they-good-for) can be good for things like [IoT on-offline](https://case.schollaart.net/2019/10/31/device-offline-detection-with-durable-entities.html)/[CircuitBreaker](https://dev.to/azure/serverless-circuit-breakers-with-durable-entities-3l2f) etc.
+  * If you have multiple function apps sharing a shared storage account, you must explicitly [configure different names for each task hub](https://docs.microsoft.com/en-us/learn/modules/implement-durable-functions/4-durable-functions-task-hubs) in the host.json files. Otherwise the multiple function apps will compete with each other for messages, which could result in undefined behavior, including orchestrations getting unexpectedly "stuck" in the Pending or Running state.
 
 
 ##  misc
