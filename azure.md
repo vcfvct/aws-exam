@@ -68,14 +68,25 @@
   * pricing: Hot/Cool/Archive
   * The `Cool Access` is for Short-term backup and disaster recovery. Archive Access is for long term backup.
 * Disk Types: HDD, standard/premium SSD, Ultra Disk(up to 64TB, for data intensive)
+* Blob storage *access tiers*. it can be set on a blob during or after upload.
+  * Hot - Optimized for storing data that is accessed frequently.
+  * Cool - Optimized for storing data that is infrequently accessed and stored for at least 30 days. Data in the *cool* access tier has slightly *lower availability*, but still has high durability, retrieval latency, and throughput characteristics similar to hot data.
+  * Archive - Optimized for storing data that is rarely accessed and stored for at least 180 days with flexible latency requirements, on the order of hours. The archive access tier can only be set at the blob level, not the account level
+
 * Archive -> Glacier. A `Blob` tier so same tool will work. 
   * To read or download a blob in archive, you must first rehydrate it to an online tier.
+  * Data in the archive access tier is stored offline. The archive tier offers the lowest storage costs but also the highest access costs and latency.
+  * The archive tier supports only LRS, GRS, and RA-GRS redundancy options.
+  * When you rehydrate a blob, you can set the priority for the rehydration operation via the optional x-ms-rehydrate-priority header on a Set Blob Tier. Standard priority or High Priority.
 * Azure Storage redundancy
   * Locally-redundant storage, LRS (replicated in same data center)
   * Zone-redundant storage, ZRS (replicated in different Data center within same AZ)
   * Geo-redundant storage (GRS): primary region with LRS
   * Geo-zone-redundant storage (GZRS): primary region with ZRS
   * For *read* access to the secondary region, configure your storage account to use read-access geo-redundant storage (RA-GRS) or read-access geo-zone-redundant storage (RA-GZRS). 
+* Blob Storage life-cycle police: transition your data to the appropriate access tiers or expire at the end of the data's lifecycle.
+  * a collection of rules in JSON format, we can use type/prefix in *filter* sections and define *actions* to do things like `tierToCool/enableAutoTierToHotFromCool/tierToArchive/delete` etc with *conditions* like `daysAfterModificationGreaterThan/daysAfterCreationGreaterThan`. 
+  * can be updated via cli/ui/REST. In portal, it is under Storage Account -> Data Management -> Lifecycle Management.
 * Azure Files -> AWS EFS, storage/sharing with NFS(Network File System) protocol.
   * File Storage use case: Hybrid, Lift and Shift.
 * You can use Power BI to analyze and visualize data stored in `Azure Data Lake` and `Azure SQL Data Warehouse`.
@@ -90,12 +101,15 @@
     * Range index
     * Spatial Index(geoJSOn)
     * Composite index(multiple fields)
+    * to optimize performance, we can [use include or exclude strategy](https://dev.to/willvelida/understanding-indexing-in-azure-cosmos-db-21kc) to index only certain fields or explicitly exclude some from the indexing.
+  * cosmosDB does not have GSI so an equivalent way is to add items into another container with corresponding id by using a different partition key(as a discriminator property). like ProductID with `productType` as partition key in a new container.
 * Azure SQL: managed SQL-Server, up to 100TB.
 * Managed MySQL/PostgreSQL and DMS
 * Azure Table storage: Every entity stored in a table must have a unique combination of *PartitionKey* and *RowKey*. The Table service does not create any secondary indexes, so PartitionKey and RowKey are the only indexed properties.
 
 ## Messaging
 * Azure Event Hubs is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters.
+* Azure Service Bus: Queues(like sqs, one Consumer, meaning message consume once unless failed) and Topic(multiple Consumer, like kafka)
 
 ## AuthN & AuthR
 * Azure Active Directory(AAD) 
