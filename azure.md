@@ -72,6 +72,8 @@
   * Hot - Optimized for storing data that is accessed frequently.
   * Cool - Optimized for storing data that is infrequently accessed and stored for at least 30 days. Data in the *cool* access tier has slightly *lower availability*, but still has high durability, retrieval latency, and throughput characteristics similar to hot data.
   * Archive - Optimized for storing data that is rarely accessed and stored for at least 180 days with flexible latency requirements, on the order of hours. The archive access tier can only be set at the blob level, not the account level
+* Azure AD integration is supported for *blob and queue* data operations. You can assign RBAC roles scoped to a subscription, resource group, storage account, or an individual container or queue to a security principal or a managed identity for Azure resources.
+* Customer-managed vs Customer-provided keys: CMK can be accessed by Microsoft and used by azure portal/CLI/Powershell, where CPK cannot and accessed only by Customer. Key rotation responsibility is on *Customer* for both.
 
 * Archive -> Glacier. A `Blob` tier so same tool will work. 
   * To read or download a blob in archive, you must first rehydrate it to an online tier.
