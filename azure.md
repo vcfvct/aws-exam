@@ -107,6 +107,12 @@
     * Composite index(multiple fields)
     * to optimize performance, we can [use include or exclude strategy](https://dev.to/willvelida/understanding-indexing-in-azure-cosmos-db-21kc) to index only certain fields or explicitly exclude some from the indexing.
   * cosmosDB does not have GSI so an equivalent way is to add items into another container with corresponding id by using a different partition key(as a discriminator property). like ProductID with `productType` as partition key in a new container.
+  * A container is scaled by distributing data and throughput across *physical* partitions. each individual *physical* partition can store up to 50GB data and 10000 RU/s
+  * partition key should 
+    1. be a property that has a value which does not change.
+    2. have a high cardinality, meaning the property should have a wide range of possible values.
+    3. Spread Request Unit(RU) consumption and data storage evenly across all logical partitions.
+  * JS based [store procedure](https://docs.microsoft.com/en-us/learn/modules/work-with-cosmos-db/4-cosmos-db-stored-procedures) and [trigger/user-defined-functions](https://docs.microsoft.com/en-us/learn/modules/work-with-cosmos-db/5-cosmos-db-triggers-user-defined-functions)
 * Azure SQL: managed SQL-Server, up to 100TB.
 * Managed MySQL/PostgreSQL and DMS
 * Azure Table storage: Every entity stored in a table must have a unique combination of *PartitionKey* and *RowKey*. The Table service does not create any secondary indexes, so PartitionKey and RowKey are the only indexed properties.
