@@ -14,6 +14,9 @@
 ## DevOps
 * ARM
   * When a user sends a request from any of the Azure tools, APIs, or SDKs, Resource Manager receives the request. It authenticates and authorizes the request. Resource Manager sends the request to the Azure service, which takes the requested action. Because all requests are handled through the same API, you see consistent results and capabilities in all the different tools.
+  * 2 deployment mode: *complete and incremental*.
+    * In complete mode, Resource Manager deletes resources that exist in the resource group that aren't specified in the template.
+    * In incremental mode, Resource Manager leaves unchanged resources that exist in the resource group but aren't specified in the template.
   * ARM is the layer managing infrastructure no matter from cli/port etc.
   * something similar to CloudFormation but without yaml support, json only. Can be nested
   * Source control, Declarative, Idempotent.
@@ -108,12 +111,16 @@
     * Composite index(multiple fields)
     * to optimize performance, we can [use include or exclude strategy](https://dev.to/willvelida/understanding-indexing-in-azure-cosmos-db-21kc) to index only certain fields or explicitly exclude some from the indexing.
   * cosmosDB does not have GSI so an equivalent way is to add items into another container with corresponding id by using a different partition key(as a discriminator property). like ProductID with `productType` as partition key in a new container.
+  * The cost to do a point read, which is fetching a single item by its ID and partition key value, for a 1KB item is *1RU*.
+  * 3 Billing mode: *Provisioned throughput, Serverless, Autoscale*.
   * A container is scaled by distributing data and throughput across *physical* partitions. each individual *physical* partition can store up to 50GB data and 10000 RU/s
   * partition key should 
     1. be a property that has a value which does not change.
     2. have a high cardinality, meaning the property should have a wide range of possible values.
     3. Spread Request Unit(RU) consumption and data storage evenly across all logical partitions.
   * JS based [store procedure](https://docs.microsoft.com/en-us/learn/modules/work-with-cosmos-db/4-cosmos-db-stored-procedures) and [trigger/user-defined-functions](https://docs.microsoft.com/en-us/learn/modules/work-with-cosmos-db/5-cosmos-db-triggers-user-defined-functions)
+  * Azure Cosmos DB allows developers to choose among the five consistency models: *strong, bounded staleness, session, consistent prefix and eventual*.
+    * If your Azure Cosmos account is configured with a consistency level other than the strong consistency, you can find out the probability that your clients may get strong and consistent reads for your workloads by looking at the Probabilistically Bounded Staleness (PBS) metric, which shows how eventual your eventual consistency is.
 * Azure SQL: managed SQL-Server, up to 100TB.
 * Managed MySQL/PostgreSQL and DMS
 * Azure Table storage: Every entity stored in a table must have a unique combination of *PartitionKey* and *RowKey*. The Table service does not create any secondary indexes, so PartitionKey and RowKey are the only indexed properties.
