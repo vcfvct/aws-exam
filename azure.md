@@ -13,6 +13,7 @@
 
 ## DevOps
 * ARM
+  * When a user sends a request from any of the Azure tools, APIs, or SDKs, Resource Manager receives the request. It authenticates and authorizes the request. Resource Manager sends the request to the Azure service, which takes the requested action. Because all requests are handled through the same API, you see consistent results and capabilities in all the different tools.
   * ARM is the layer managing infrastructure no matter from cli/port etc.
   * something similar to CloudFormation but without yaml support, json only. Can be nested
   * Source control, Declarative, Idempotent.
@@ -147,6 +148,7 @@
   * The advanced monitoring capabilities in Security Center lets you track and manage *compliance and governance* over time. The overall compliance provides you with a measure of how much your subscriptions are compliant with policies associated with your workload.
 * Azure Key vault -> storing credentials and grant/revoke access. Similar to AWS Secret Manager.
   * ps command: `Get-AzKeyVaultSecret -VaultName "keyvaultName"`
+  * Azure Key Vault has two service tiers: Standard, which encrypts with a software key, and a Premium tier, which includes hardware security module(HSM)-protected keys.
 * Azure Information protection -> protect files like word/excel etc while sharing as email attachments etc.
 * Azure sentinel, collect/aggregate/analyze security issues automatically.
 * Defender for Identity(formerly Advanced Threat Protection) -> manage/monitor user behaviors in organization, and reporting.
