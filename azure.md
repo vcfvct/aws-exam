@@ -43,6 +43,10 @@
 * Not all Azure regions support availability zones.
 
 ## Compute
+* Azure VM
+  * availability zone vs availability set
+    * availability zones are used to protect applications from entire Azure data center failures, while availability sets are used to protect applications from hardware failures within an azure datacenter.
+  * azure will NOT restart more than one *update domain* at one time.
 * Scale Sets -> ASG
 * App Services: PaaS with `Web Apps` for standard app or Containers or APIs, with different run time like node/php/.net etc.
   * use `az webapp list-runtimes --os-type linux` to retrieve the current supported runtime list.
@@ -57,7 +61,12 @@
   * Continuous WebJob: keep running, on *all* instances
   * Triggered WebJob: only run when manually triggered or scheduled, on a *single* instance.
 * `Azure Container Instances` -> FarGate: provide portable environments for virtualized applications. It can start containers in Azure in seconds, without the need to *provision and manage* VMs.
+  * The top-level resource in Azure Container Instances is the [container group](https://docs.microsoft.com/en-us/learn/modules/create-run-container-images-azure-container-instances/2-azure-container-instances-overview). A container group is a collection of containers that get scheduled on the same host machine. The containers in a container group share a lifecycle, resources, local network, and storage volumes. It's similar in concept to a pod in Kubernetes.
+  * There are two common ways to deploy a multi-container group: use a Resource Manager template or a YAML file.
+    1. A Resource Manager template is recommended when you need to deploy additional Azure service resources (for example, an Azure Files share) when you deploy the container instances. 
+    2. Due to the YAML format's more concise nature, a YAML file is recommended when your deployment includes only container instances.
 * AKS(k8s) + ACR(container registry)
+  * build image using `az zcr build xxx` could offload the image building to ACR.
 * Azure DevTest Labs -> support windows/linux, quickly provision development and test environments, Set automated shutdowns to minimize costs
 * `Azure Databricks` is an Apache *Spark*-based analytics platform.
 * API-Management -> api-gateway.
@@ -78,8 +87,9 @@
   * Archive - Optimized for storing data that is rarely accessed and stored for at least 180 days with flexible latency requirements, on the order of hours. The archive access tier can only be set at the blob level, not the account level
 * Azure AD integration is supported for *blob and queue* data operations. You can assign RBAC roles scoped to a subscription, resource group, storage account, or an individual container or queue to a security principal or a managed identity for Azure resources.
 * Customer-managed vs Customer-provided keys: CMK can be accessed by Microsoft and used by azure portal/CLI/Powershell, where CPK cannot and accessed only by Customer. Key rotation responsibility is on *Customer* for both.
-* list files: `az storage blob list --connection-string 'xxx' --container-name YourContainer -otable
-`
+* list files: `az storage blob list --connection-string 'xxx' --container-name YourContainer -otable`
+* A *shared access signature* [SAS](https://docs.microsoft.com/en-us/learn/modules/implement-shared-access-signatures/2-shared-access-signatures-overview) is a signed URI that points to one or more storage resources and includes a token that contains a special set of query parameters. The token indicates how the resources may be accessed by the client. One of the query parameters, the signature, is constructed from the SAS parameters and signed with the key that was used to create the SAS. This signature is used by Azure Storage to authorize access to the storage resource.
+  * like S3 pre-signed URL. useful when uploading and other temporary access.
 
 * Archive -> Glacier. A `Blob` tier so same tool will work. 
   * To read or download a blob in archive, you must first rehydrate it to an online tier.
