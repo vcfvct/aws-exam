@@ -71,6 +71,7 @@
 * `Azure Databricks` is an Apache *Spark*-based analytics platform.
 * API-Management -> api-gateway.
   * allow group apis into [products](https://github.com/Azure-Samples/Serverless-APIs/blob/main/readme/3%20-%20Products.md) for easier management like publish/unpublish, applying policies etc.
+  * apim come with a *developer portal* showing the APIs details.
 
 ## Storage
 * Blobs/Files/Queues(messages)/Tables(no-SQL)/Disks(Block-level).
@@ -152,8 +153,18 @@
     * 1:many relationship with its corresponding service principal object(s).
   * [service principal](https://identitydocs.azurewebsites.net/static/v2/Service-principal-provisioning/Overview-of-service-principal-provisioning.html) are AAD objects which represent your app in each customer's tenant. They define what the app can actually do in the specific tenant, who can access the app, and what resources the app can access.
   * An `Azure AD application` is defined by its one and only `application object`, which resides in the Azure AD tenant where the application was registered (known as the application's "home" tenant). 
-  * An `application object` is used as a template or blueprint to create one or more `service principal` objects. The application object describes three aspects of an application: how the service can issue tokens in order to access the application, resources that the application might need to access, and the actions that the application can take. A `service principal` is created in *every* tenant where the application is used. Similar to a class in object-oriented programming, the application object has some static properties that are applied to all the created service principals (or application instances). The `application object` describes three aspects of an application: 1. how the service can issue tokens in order to access the application, 2. resources that the application might need to access, and 3. the actions that the application can take.
-  * The `security principal` defines the access policy and permissions for the user/application in the Azure AD tenant. This enables core features such as authentication of the user/application during sign-in, and authorization during resource access.
+  * An `application object` is used as a template or blueprint to create one or more `service principal` objects. The `application object` describes three aspects of an application: 1. how the service can issue tokens in order to access the application, 2. resources that the application might need to access, and 3. the actions that the application can take. A `service principal` is created in *every* tenant where the application is used. Similar to a class in object-oriented programming, the application object has some static properties that are applied to all the created service principals (or application instances). 
+  * The `security principal` defines the access policy and permissions for the user/application in the Azure AD tenant. This enables core features such as authentication of the user/application during sign-in, and authorization during resource access. A *service principal* must be created in *each* tenant where the application is used, enabling it to establish an identity for sign-in and/or access to resources being secured by the tenant. A single-tenant application has only one service principal (in its home tenant), created and consented for use during application registration. A multi-tenant application also has a service principal created in each tenant where a user from that tenant has consented to its use.
+  * An application object has:
+    * A 1:1 relationship with the software application, and
+    * A 1:many relationship with its corresponding service principal object(s).
+  * The Microsoft [identity platform](https://docs.microsoft.com/en-us/training/modules/explore-microsoft-identity-platform/4-permission-consent) implements the OAuth 2.0 authorization protocol
+    *  Any web-hosted resource that integrates with the Microsoft identity platform has a *resource identifier*, or application ID URI. Here are some examples of Microsoft web-hosted resources:
+        Microsoft Graph: https://graph.microsoft.com
+        Microsoft 365 Mail API: https://outlook.office.com
+        Azure Key Vault: https://vault.azure.net
+      The same is true for any third-party resources that have integrated with the Microsoft identity platform. Any of these resources also can define a set of permissions that can be used to divide the functionality of that resource into smaller chunks. When a resource's functionality is chunked into small permission sets, third-party apps can be built to request only the permissions that they need to perform their function. Users and administrators can know what data the app can access. In OAuth 2.0, these types of permission sets are called `scopes`. They're also often referred to as `permissions`. In the Microsoft identity platform, a permission is represented as a string value. An app requests the permissions it needs by specifying the permission in the *scope* query parameter. Identity platform supports several well-defined OpenID Connect scopes as well as resource-based permissions (each permission is indicated by appending the permission value to the resource's identifier or application ID URI). For example, the permission string https://graph.microsoft.com/Calendars.Read is used to request permission to read users calendars in Microsoft Graph.
+    * 
 
 ## Monitoring
 * `Azure Service Health` notifies you about Azure service incidents and planned maintenance so you can take action to mitigate downtime. Configure customizable cloud alerts and use your personalized dashboard to analyze health issues, monitor the impact to your cloud resources, get guidance and support, and share details and updates.
@@ -210,6 +221,11 @@
   * [billing](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-billing) is the same way as normal Functions.
   * [Durable Entities](https://markheath.net/post/durable-entities-what-are-they-good-for) can be good for things like [IoT on-offline](https://case.schollaart.net/2019/10/31/device-offline-detection-with-durable-entities.html)/[CircuitBreaker](https://dev.to/azure/serverless-circuit-breakers-with-durable-entities-3l2f) etc.
   * If you have multiple function apps sharing a shared storage account, you must explicitly [configure different names for each task hub](https://docs.microsoft.com/en-us/learn/modules/implement-durable-functions/4-durable-functions-task-hubs) in the host.json files. Otherwise the multiple function apps will compete with each other for messages, which could result in undefined behavior, including orchestrations getting unexpectedly "stuck" in the Pending or Running state.
+
+## Data
+* [Microsoft Graph](https://docs.microsoft.com/en-us/training/modules/microsoft-graph/2-microsoft-graph-overview) is the gateway to data and intelligence in Microsoft 365. It provides a unified programmability model that you can use to access the tremendous amount of data in Microsoft 365, Windows 10, and Enterprise Mobility + Security.
+  * The Microsoft Graph API offers a single endpoint, https://graph.microsoft.com.
+  * Microsoft Graph is a RESTful web API that enables you to access Microsoft Cloud service resources. After you register your app and get authentication tokens for a user or service, you can make requests to the Microsoft Graph API.
 
 
 ##  misc
