@@ -137,7 +137,8 @@
 * Azure Table storage: Every entity stored in a table must have a unique combination of *PartitionKey* and *RowKey*. The Table service does not create any secondary indexes, so PartitionKey and RowKey are the only indexed properties.
 
 ## Messaging
-* Azure Event Hubs is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters.
+* Azure Event Hubs(~=AWS Managed Streaming for Kafka / MSK) is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters.
+  * Event Hubs traffic is controlled by throughput units. A single throughput unit allows 1 MB per second or 1000 events per second of ingress and twice that amount of egress. Standard Event Hubs can be configured with 1-20 throughput units, and you can purchase more with a quota increase support request.
 * Azure Service Bus: Queues(like sqs, one Consumer, meaning message consume once unless failed) and Topic(multiple Consumer, like kafka)
 
 ## AuthN & AuthR
@@ -164,7 +165,9 @@
         Microsoft 365 Mail API: https://outlook.office.com
         Azure Key Vault: https://vault.azure.net
       The same is true for any third-party resources that have integrated with the Microsoft identity platform. Any of these resources also can define a set of permissions that can be used to divide the functionality of that resource into smaller chunks. When a resource's functionality is chunked into small permission sets, third-party apps can be built to request only the permissions that they need to perform their function. Users and administrators can know what data the app can access. In OAuth 2.0, these types of permission sets are called `scopes`. They're also often referred to as `permissions`. In the Microsoft identity platform, a permission is represented as a string value. An app requests the permissions it needs by specifying the permission in the *scope* query parameter. Identity platform supports several well-defined OpenID Connect scopes as well as resource-based permissions (each permission is indicated by appending the permission value to the resource's identifier or application ID URI). For example, the permission string https://graph.microsoft.com/Calendars.Read is used to request permission to read users calendars in Microsoft Graph.
-    * 
+  * *Managed identities* provide an identity for applications to use when connecting to resources that support Azure Active Directory (Azure AD) authentication. Applications may use the managed identity to obtain Azure AD tokens.
+    * `system-assgined managed identity` is created by Azure and used on Azuer VM or App service like aws instance profile that the lifecycle is the same as the instance. `user-assigned managed identity` is created separated and can be reused by many services.
+    * a service principal is created for the managed identity, and this service principal client Id and certificate is use later for getting the JWT tokens etc.
 
 ## Monitoring
 * `Azure Service Health` notifies you about Azure service incidents and planned maintenance so you can take action to mitigate downtime. Configure customizable cloud alerts and use your personalized dashboard to analyze health issues, monitor the impact to your cloud resources, get guidance and support, and share details and updates.
@@ -236,3 +239,4 @@
 * The `Azure Total Cost of Ownership`(TCO) Calculator is used to estimate the cost savings you can achieve by migrating your application workloads to Microsoft ..
 * `Azure Cost Management` is the process of effectively planning and controlling costs involved in your business. Customers with an Azure Enterprise Agreement(EA), Microsoft Customer Agreement(MCA), or Microsoft Partner Agreement(MPA) can use Azure Cost Management.
 * Traffic Manager -> Route53
+* Azure *App Configuration* is designed to be a centralized repository for feature flags. 
