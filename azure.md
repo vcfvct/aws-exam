@@ -140,6 +140,16 @@
 * Azure Event Hubs(~=AWS Managed Streaming for Kafka / MSK) is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters.
   * Event Hubs traffic is controlled by throughput units. A single throughput unit allows 1 MB per second or 1000 events per second of ingress and twice that amount of egress. Standard Event Hubs can be configured with 1-20 throughput units, and you can purchase more with a quota increase support request.
 * Azure Service Bus: Queues(like sqs, one Consumer, meaning message consume once unless failed) and Topic(multiple Consumer, like kafka)
+* EventGrid(-> EventBridge?)
+  * Event Grid doesn't guarantee order for event delivery, so subscribers may receive them out of order.
+  * Subscribers use the subject to filter and route events. Consider providing the path for where the event happened, so subscribers can filter by segments of that path. For example, the Storage Accounts publisher provides the subject `/blobServices/default/containers/<container-name>/blobs/<file>` when a file is added to a container. A subscriber could filter by the path `/blobServices/default/containers/testcontainer` to get all events for that container but not other containers in the storage account. A subscriber could also filter or route by the suffix .txt to only work with text files.
+  * [retry](https://docs.microsoft.com/en-us/training/modules/azure-event-grid/4-event-grid-delivery-retry) does *NOT* happen if it is client error like 400(bad request)/413(request too large)/403(forbidden). Otherwise Event Grid waits 30 seconds for a response after delivering a message. After 30 seconds, if the endpoint hasn’t responded, the message is queued for retry. Event Grid uses an exponential backoff retry policy for event delivery.
+  * If the endpoint responds within 3 minutes, Event Grid will attempt to remove the event from the retry queue on a best effort basis but duplicates may still be received. Event Grid adds a small randomization to all retry steps and may opportunistically skip certain retries if an endpoint is consistently unhealthy, down for a long period, or appears to be overwhelmed.
+  * When Event Grid can't deliver an event within a certain time period or after trying to deliver the event a certain number of times, it can send the undelivered event to a storage account. By default, Event Grid doesn't turn on dead-lettering. To enable it, you must specify a storage account to hold undelivered events when creating the event subscription.
+  * When creating an event subscription, you have three options for [filtering](https://docs.microsoft.com/en-us/training/modules/azure-event-grid/7-event-grid-filtering):
+    1. Event types
+    2. Subject begins with or ends with
+    3. Advanced fields and operators. To filter by values in the data fields and specify the comparison operator, use the advanced filtering option.
 
 ## AuthN & AuthR
 * Azure Active Directory(AAD) 
@@ -208,7 +218,7 @@
 * `Azure Bot Services` provides a digital online assistant that provides speech support. Bots provide an experience that feels less like using a computer and more like dealing with a person - or at least an intelligent robot. They can be used to shift simple, repetitive tasks, such as taking a dinner reservation or gathering profile information, on to automated systems that may no longer require direct human intervention. 
 
 ## Serverless
-* Azure functions, App Logic(step functions?), EventGrid(-> EventBridge?)
+* Azure functions, App Logic(step functions?), 
   * For Azure Functions, you develop orchestrations by writing code and using the Durable Functions extension. For Logic Apps, you create orchestrations by using a GUI or editing configuration files.
 * Azure function hosting plans
   * *Consumption plan* 	This is the default hosting plan. It scales automatically and you only pay for compute resources when your functions are running. Instances of the Functions host are dynamically added and removed based on the number of incoming events.
