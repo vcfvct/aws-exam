@@ -36,6 +36,16 @@
     * `az network vnet subnet list -g "<alias>-rg" --vnet-name "vnetName" -o table`. The `-o` option enables you to interact with results in different formats (ex: JSON, table, tsv). It can be combined with the `--query` option even when the output is table instead of JSON.
 * Application Gateway -> ALB, Load Balancer -> ELB, 
 * CDN: [profile + endpoint](https://docs.microsoft.com/en-us/azure/cdn/cdn-create-new-endpoint). A cdn profile is a container for CDN endpoints and specifies a pricing tier. An endpoint is where we can specify origins/pat/path and other behaviors.
+  * Different Tiers including Standard Microsoft, Verizon, Akamai.
+  * You can purge content in [several ways](https://learn.microsoft.com/en-us/training/modules/develop-for-storage-cdns/3-control-cache-behavior):
+    * On an endpoint by endpoint basis, or all endpoints simultaneously should you want to update everything on your CDN at once.
+    * Specify a file, by including the path to that file or all assets on the selected endpoint by checking the Purge All checkbox in the Azure portal.
+    * Based on wildcards (*) or using the root (/).
+  * Default TTL values are as follows:
+    * Generalized web delivery optimizations: 7 days 
+    * Large file optimizations: 1 day 
+    * Media streaming optimizations: 1 year
+
 * ExpressRoute -> DirectConnect. Connect to on-premises stuff with private connection instead of public Internet.
 * A Point-to-Site (P2S) VPN gateway connection lets you create a secure connection to your virtual network from an individual client computer.
 * A Site-to-Site (S2S) VPN gateway is good for Dev/test/ lab scenarios and small to medium scale production workloads for cloud services and virtual machines
