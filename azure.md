@@ -120,6 +120,11 @@
   * File Storage use case: Hybrid, Lift and Shift.
 * You can use Power BI to analyze and visualize data stored in `Azure Data Lake` and `Azure SQL Data Warehouse`.
 * `Azure containers` are the backbone of the *virtual disks* platform for Azure IaaS. Both Azure OS and data disks are implemented as virtual disks where data is durably persisted in the Azure Storage platform and then delivered to the *virtual machines* for maximum performance. Azure Disks are persisted in Hyper-V VHD format and stored as a page blob in Azure Storage.
+* Azure Cache for Redis, Microsoft recommends always use Standard or Premium Tier for production systems. The Basic Tier is a single node system with no data replication and no SLA.
+  * The Premium tier allows you to persist data in two ways to provide disaster recovery:
+    1. RDB persistence takes a periodic snapshot and can rebuild the cache using the snapshot in case of failure.
+    2. AOF persistence saves every write operation to a log that is saved at least once per second. This creates bigger files than RDB but has less data loss.[]
+  * The Premium tier also deployment to a virtual network.
 
 ## Databases
 * CosmosDB: Global from start, single digit latency, pay for use. 
@@ -152,6 +157,7 @@
 * Azure Service Bus: Queues(like sqs, one Consumer, meaning message consume once unless failed) and Topic(multiple Consumer, like kafka)
   * Message sessions enable joint and ordered handling of unbounded sequences of related messages.(FIFO)
   * [Azure Storage Queues](https://medium.com/awesome-azure/azure-difference-between-azure-storage-queue-and-service-bus-queue-azure-queue-storage-vs-servicebus-3f7921b0159e) are simpler to use but are less sophisticated and flexible than Service Bus queues.
+  * For Queues, You can specify two different modes in which Service Bus receives messages: *Receive and delete* or *Peek lock*(contains a visibility timeout).
 * EventGrid(-> EventBridge?)
   * Event Grid doesn't guarantee order for event delivery, so subscribers may receive them out of order.
   * Subscribers use the subject to filter and route events. Consider providing the path for where the event happened, so subscribers can filter by segments of that path. For example, the Storage Accounts publisher provides the subject `/blobServices/default/containers/<container-name>/blobs/<file>` when a file is added to a container. A subscriber could filter by the path `/blobServices/default/containers/testcontainer` to get all events for that container but not other containers in the storage account. A subscriber could also filter or route by the suffix .txt to only work with text files.
