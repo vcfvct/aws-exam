@@ -214,6 +214,7 @@
 * Azure Key vault -> storing credentials and grant/revoke access. Similar to AWS Secret Manager.
   * ps command: `Get-AzKeyVaultSecret -VaultName "keyvaultName"`
   * Azure Key Vault has two service tiers: Standard, which encrypts with a software key, and a Premium tier, which includes hardware security module(HSM)-protected keys.
+  * A Key Vault *access policy* determines whether a given security principal, namely a user, application or user group, can perform different operations on Key Vault secrets, keys, and certificates.
 * Azure Information protection -> protect files like word/excel etc while sharing as email attachments etc.
 * Azure sentinel, collect/aggregate/analyze security issues automatically.
 * Defender for Identity(formerly Advanced Threat Protection) -> manage/monitor user behaviors in organization, and reporting.
