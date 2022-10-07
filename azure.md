@@ -79,9 +79,17 @@
   * build image using `az zcr build xxx` could offload the image building to ACR.
 * Azure DevTest Labs -> support windows/linux, quickly provision development and test environments, Set automated shutdowns to minimize costs
 * `Azure Databricks` is an Apache *Spark*-based analytics platform.
-* API-Management -> api-gateway.
+* [API-Management](https://learn.microsoft.com/en-us/training/modules/explore-api-management/2-api-management-overview) -> api-gateway.
   * allow group apis into [products](https://github.com/Azure-Samples/Serverless-APIs/blob/main/readme/3%20-%20Products.md) for easier management like publish/unpublish, applying policies etc.
-  * apim come with a *developer portal* showing the APIs details.
+  * Components:
+    1. apim come with a *developer portal* showing the APIs details like documentation, API try-out interactively, create account and subscribe to get API key, Access Analytics on own usage.
+    2. *API Gateway* which accepts call and route to backend, verify API keys/jwt/certificates, caching, usage quotas and rate limits.
+    3. *Azure portal* which Define/import API Schema, package APIS into products, manage users, set policies like quotas or transformation on APIs.
+  * *Policies* are a collection of statements that are executed sequentially on the request or response of an API. Popular statements include format conversion from XML to JSON and call rate limiting to restrict the number of incoming calls from a developer, and many other policies are available.
+  * [Gateway pattern](https://learn.microsoft.com/en-us/training/modules/explore-api-management/3-api-gateways):
+    1. Gateway Routing: Use the gateway as a reverse proxy to route requests to one or more backend services, using layer 7 routing.
+    2. Gateway aggregation: when a single operation requires calls to multiple backend services, the client sends one request to the gateway. The gateway dispatches requests to the various backend services, and then aggregates the results and sends them back to the client. This helps to reduce chattiness between the client and the backend.
+    3. Gateway Offloading: Use the gateway to offload functionality from individual services to the gateway, particularly cross-cutting concerns. It can be useful to consolidate these functions into one place, rather than making every service responsible for implementing them like SSL termination, auth, rate limit, logging, caching, gzip etc.
 
 ## Storage
 * Blobs/Files/Queues(messages)/Tables(no-SQL)/Disks(Block-level).
@@ -206,6 +214,9 @@
 ## Monitoring
 * `Azure Service Health` notifies you about Azure service incidents and planned maintenance so you can take action to mitigate downtime. Configure customizable cloud alerts and use your personalized dashboard to analyze health issues, monitor the impact to your cloud resources, get guidance and support, and share details and updates.
 * `Azure Monitor` -> CloudWatch: Collect, analyze, and act on telemetry data from your Azure and on-premises environments. Azure Monitor helps you maximize performance and availability of your applications and proactively identify problems in seconds.
+  * Availability test: After you've deployed your web app or website, you can set up recurring tests to monitor availability and responsiveness. Application Insights sends web requests to your application at regular intervals from points around the world. It can alert you if your application isn't responding or responds too slowly.
+  * *Application Map* helps you spot performance bottlenecks or failure hotspots across all components of your distributed application. Each node on the map represents an application component or its dependencies; and has health KPI and alerts status.
+* [KQL, Kusto Query Language](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/). A Kusto query is a read-only request to process data and return results.
 * `Azure Advisor` provides you with a consistent, consolidated view of recommendations for all your Azure resources. It integrates with Azure Security Center to bring you *security* recommendations. It helps you optimize and reduce your overall Azure spend/cost by identifying idle and underutilized resources.
 
 ## Security
