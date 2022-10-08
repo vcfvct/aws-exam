@@ -67,6 +67,7 @@
   * `general settings` under `Configuration` has some common settings like stack/runtime-version/tls etc.
   * auto-scale by 1. metric(cpu/memory/disk-queue/http-queue/data-numberOfBytes in or out) min-duration 5 minutes or 2. schedule.
   * Standard Service Plan+ can do automatic scaling of, not Free-Shared or Basic plan.
+  * sequences: 1. create ResourceGroup, 2. create appServicePlan, 3. create webApp,
 * [WebJobs](https://docs.microsoft.com/en-us/azure/app-service/webjobs-create) is a feature of Azure `App Service` that enables you to run a program or script in the same instance as a web app, API app, or mobile app. There is no additional cost to use WebJobs
   * WebJobs is not yet supported for App Service on Linux.(As of Aug 2022)
   * Continuous WebJob: keep running, on *all* instances
@@ -235,6 +236,7 @@
   1. Select Users/Groups to assign for the policy to apply to.
   2. Define the cloud-app/actions that trigger the policy
   3. *Access Control* let you define the requirements for a user to be granted access. They might be required to use an approved client app or a device that's hybrid-joined to Azure AD.
+* For client certificate auth in TLS mutual authentication, it would be *base64* encoded inside the *Request Header*.
 
 ## Pricing
 * An account can have multiple subscriptions. Billing Admin and Management Group
