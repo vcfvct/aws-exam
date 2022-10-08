@@ -66,6 +66,7 @@
   * `Application settings` under `Configuration` defines environment variables for the app.
   * `general settings` under `Configuration` has some common settings like stack/runtime-version/tls etc.
   * auto-scale by 1. metric(cpu/memory/disk-queue/http-queue/data-numberOfBytes in or out) min-duration 5 minutes or 2. schedule.
+  * Standard Service Plan+ can do automatic scaling of, not Free-Shared or Basic plan.
 * [WebJobs](https://docs.microsoft.com/en-us/azure/app-service/webjobs-create) is a feature of Azure `App Service` that enables you to run a program or script in the same instance as a web app, API app, or mobile app. There is no additional cost to use WebJobs
   * WebJobs is not yet supported for App Service on Linux.(As of Aug 2022)
   * Continuous WebJob: keep running, on *all* instances
@@ -230,6 +231,10 @@
 * Azure sentinel, collect/aggregate/analyze security issues automatically.
 * Defender for Identity(formerly Advanced Threat Protection) -> manage/monitor user behaviors in organization, and reporting.
 * You can view list of compliance certifications(Azure has 90+ including over 50 specific to global regions/countries) in the `Trust Center` to determine whether Azure meets your *regional requirements*.
+* MFA login can be configured with [Conditional Access policy](https://learn.microsoft.com/en-us/azure/active-directory/authentication/tutorial-enable-azure-mfa).
+  1. Select Users/Groups to assign for the policy to apply to.
+  2. Define the cloud-app/actions that trigger the policy
+  3. *Access Control* let you define the requirements for a user to be granted access. They might be required to use an approved client app or a device that's hybrid-joined to Azure AD.
 
 ## Pricing
 * An account can have multiple subscriptions. Billing Admin and Management Group
@@ -264,15 +269,21 @@
   * Maximum instances: A single function app only scales out to a maximum of 200 instances for Consumption plan and 100 for Premium plan. A single instance may process more than one message or request at a time though, so there isn't a set limit on number of concurrent executions. `functionAppScaleLimit` is the variable to tweak the number of instances, which can be set to 0 or *null* for unrestricted.
   * New instance rate: For HTTP triggers, new instances are allocated, at most, once per second. For non-HTTP triggers, new instances are allocated, at most, once every 30 seconds. Scaling is faster when running in a Premium plan.
   * Using an *App Service plan*, you can manually scale out by adding more VM instances. You can also enable autoscale, though autoscale will be slower than the elastic scale of the Premium plan.
-* [Timer trigger](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer) configuration.
+* Triggers and Bindings
+  * Triggers cause a function to run. A trigger defines how a function is invoked and a function must have exactly one trigger. Triggers have associated data, which is often provided as the payload of the function.
+  * Binding to a function is a way of declaratively connecting another resource to the function; bindings may be connected as input bindings, output bindings, or both. Data from bindings is provided to the function as parameters.
+  * [Triggers and bindings](https://learn.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings) let you avoid hard-coding access to other services. Your function receives data (for example, the content of a queue message) in function parameters. You send data (for example, to create a queue message) by using the return value of the function.
+  * [Timer trigger](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-timer) configuration.
 * [Durable Functions](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-overview) is an extension of Azure Functions that lets you write stateful functions in a serverless compute environment. The extension lets you define stateful workflows by writing [orchestrator functions](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-orchestrations) and [stateful entities](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-entities) by writing entity functions using the Azure Functions programming model. Behind the scenes, the extension manages state, checkpoints, and restarts for you, allowing you to focus on your business logic.
   * Durable Functions is good for function-chain/fan-in-out/async-api/monitoring/human-interaction/aggregation etc.
   * [billing](https://docs.microsoft.com/en-us/azure/azure-functions/durable/durable-functions-billing) is the same way as normal Functions.
   * [Durable Entities](https://markheath.net/post/durable-entities-what-are-they-good-for) can be good for things like [IoT on-offline](https://case.schollaart.net/2019/10/31/device-offline-detection-with-durable-entities.html)/[CircuitBreaker](https://dev.to/azure/serverless-circuit-breakers-with-durable-entities-3l2f) etc.
   * If you have multiple function apps sharing a shared storage account, you must explicitly [configure different names for each task hub](https://docs.microsoft.com/en-us/learn/modules/implement-durable-functions/4-durable-functions-task-hubs) in the host.json files. Otherwise the multiple function apps will compete with each other for messages, which could result in undefined behavior, including orchestrations getting unexpectedly "stuck" in the Pending or Running state.
+  * The Durable Functions extension *automatically* adds a set of *HTTP APIs* to the Azure Functions host. With these APIs, you can interact with and manage orchestrations and entities without writing any code.
 * When integrating with Azure Queue Storage
   * use [maxDequeueCount](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue?tabs=in-process%2Cextensionv5%2Cextensionv3&pivots=programming-language-csharp#host-json) to define the number of times to try processing a message before moving it to the poison queue. Default is 5.
   * default batch size is 16, max is 32.
+* [Azure Functions custom handlers](https://learn.microsoft.com/en-us/azure/azure-functions/functions-custom-handlers) are lightweight web servers that receive events from Functions host. Any language that supports HTTP primitives can implement a custom handler.
 
 ## Data
 * [Microsoft Graph](https://docs.microsoft.com/en-us/training/modules/microsoft-graph/2-microsoft-graph-overview) is the gateway to data and intelligence in Microsoft 365. It provides a unified programmability model that you can use to access the tremendous amount of data in Microsoft 365, Windows 10, and Enterprise Mobility + Security.
@@ -289,3 +300,9 @@
 * `Azure Cost Management` is the process of effectively planning and controlling costs involved in your business. Customers with an Azure Enterprise Agreement(EA), Microsoft Customer Agreement(MCA), or Microsoft Partner Agreement(MPA) can use Azure Cost Management.
 * Traffic Manager -> Route53
 * Azure *App Configuration* is designed to be a centralized repository for feature flags. 
+* Azure Search
+  * *Microsoft.Azure.Search.Models.SearchParameters*
+    * Filter: Gets or sets the OData $filter expression to apply to the search query
+    * QueryType: lucene query, like Regex/fulltext-search etc.
+    * SearchMode: match criteria -> "any" or "all"
+  * create `SearchIndexClient` to connect to the search index, create IndexBatch that contains the documents, call `Documents.Index` and pass the IndexBatch.
