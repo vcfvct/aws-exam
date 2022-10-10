@@ -68,6 +68,9 @@
   * auto-scale by 1. metric(cpu/memory/disk-queue/http-queue/data-numberOfBytes in or out) min-duration 5 minutes or 2. schedule.
   * Standard Service Plan+ can do automatic scaling of, not Free-Shared or Basic plan.
   * sequences: 1. create ResourceGroup, 2. create appServicePlan, 3. create webApp,
+  * The *Custom Script Extension* V2 downloads and runs scripts on Azure virtual machines (VMs). This extension is useful for post-deployment configuration, software installation, or any other configuration or management task. You can download scripts from Azure Storage or another accessible internet location, or you can provide them to the extension runtime.
+    * The Custom Script Extension integrates with Azure Resource Manager templates. You can also run it by using the Azure CLI, PowerShell, or the Azure Virtual Machines REST API.
+    * Once the `Custom Script Extension` has been added to a VM, it needs to then be removed before another instance can be run. This is not a difficult operation but when running multiple scripts against a VM is less than desirable. `Run Command` is an alternative and more lightweight method for running scripts against Azure VMs. Multiple instances can be run without the need of any type of clean-up action.
 * [WebJobs](https://docs.microsoft.com/en-us/azure/app-service/webjobs-create) is a feature of Azure `App Service` that enables you to run a program or script in the same instance as a web app, API app, or mobile app. There is no additional cost to use WebJobs
   * WebJobs is not yet supported for App Service on Linux.(As of Aug 2022)
   * Continuous WebJob: keep running, on *all* instances
