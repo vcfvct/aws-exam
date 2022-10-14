@@ -59,6 +59,7 @@
   * availability zone vs availability set
     * availability zones are used to protect applications from entire Azure data center failures, while availability sets are used to protect applications from hardware failures within an azure datacenter.
   * azure will NOT restart more than one *update domain* at one time.
+  * Azure Instance Metadata Service (IMDS) endpoint: `http://169.254.169.254/metadata/identity/oauth2/token` to retrieve access token(managed identity) for services like Azure Storage.
 * Scale Sets -> ASG
 * App Services: PaaS with `Web Apps` for standard app or Containers or APIs, with different run time like node/php/.net etc.
   * use `az webapp list-runtimes --os-type linux` to retrieve the current supported runtime list.
@@ -142,6 +143,7 @@
     1. RDB persistence takes a periodic snapshot and can rebuild the cache using the snapshot in case of failure.
     2. AOF persistence saves every write operation to a log that is saved at least once per second. This creates bigger files than RDB but has less data loss.[]
   * The Premium tier also deployment to a virtual network.
+* You can copy blobs, directories, and containers between storage accounts by using the *AzCopy* command-line utility. `AZCopy` should theoretically offer better performance over `az storage blob xxx` or `Start-AzureStorageBlobCopy` as it is designed for optimal performance and operating a *bulk* mode.
 
 ## Databases
 * CosmosDB: Global from start, single digit latency, pay for use. 
@@ -169,6 +171,7 @@
     * *Session consistency* is the default consistency that you get while configuring the cosmos DB account. This level of consistency honors the client session. It ensures a strong consistency for an application session with the same session token. What that means is that whatever is written by a session will return the latest version for reads as well, from that same session.
     * *Consistent Prefix* model is similar to bounded staleness except, the operational or time lag guarantee. The replicas guarantee the consistency and order of the writes however the data is not always current. This model ensures that the user never sees an out-of-order write. For example, if data is written in the order A, B, and C, the user may either see A, A,B or A,B,C, but never out-of-order entry like A,C or B,A,C. This model provides high availability and very low latency which is best for certain applications that can afford the lag and still function as expected.
     * *Eventual consistency* is the weakest consistency level of all. The first thing to consider in this model is that there is no guarantee on the order of the data and also no guarantee of how long the data can take to replicate. As the name suggests, the reads are consistent, but eventually.
+  * .NET client order: `CosmosClient -> Database -> Container -> Item`.
 
 * Azure SQL: managed SQL-Server, up to 100TB.
 * Managed MySQL/PostgreSQL and DMS
@@ -181,6 +184,10 @@
   * Message sessions enable joint and ordered handling of unbounded sequences of related messages.(FIFO)
   * [Azure Storage Queues](https://medium.com/awesome-azure/azure-difference-between-azure-storage-queue-and-service-bus-queue-azure-queue-storage-vs-servicebus-3f7921b0159e) are simpler to use but are less sophisticated and flexible than Service Bus queues.
   * For Queues, You can specify two different modes in which Service Bus receives messages: *Receive and delete* or *Peek lock*(contains a visibility timeout).
+  * Service Bus supports [three filter conditions](https://learn.microsoft.com/en-us/azure/service-bus-messaging/topic-filters#filters):
+    * SQL Filters: A SqlFilter holds a SQL-like conditional expression that is evaluated in the broker against the arriving messages' user-defined properties and system properties.
+    * Boolean filters - The TrueFilter and FalseFilter either cause all arriving messages (true) or none of the arriving messages (false) to be selected for the subscription.
+    * Correlation Filters: A simplified SqlFilter with only `AND-ed`/`Equal` conditions. It has better performance.
 * EventGrid(-> EventBridge?)
   * Event Grid doesn't guarantee order for event delivery, so subscribers may receive them out of order.
   * Subscribers use the subject to filter and route events. Consider providing the path for where the event happened, so subscribers can filter by segments of that path. For example, the Storage Accounts publisher provides the subject `/blobServices/default/containers/<container-name>/blobs/<file>` when a file is added to a container. A subscriber could filter by the path `/blobServices/default/containers/testcontainer` to get all events for that container but not other containers in the storage account. A subscriber could also filter or route by the suffix .txt to only work with text files.
