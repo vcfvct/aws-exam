@@ -22,6 +22,8 @@
   * Source control, Declarative, Idempotent.
   * no similar things like CDK for now for IaS, alternative is Terraform(or CDK to Terraform).
   * Every resource need to be inside a resource group. No nested RG. RG can contain resources from multiple regions.
+  * Before deploying an Azure Resource Manager template (ARM template), you can preview the changes that will happen. Azure Resource Manager provides the *what-if operation* to let you see how resources will change if you deploy the template. The what-if operation doesn't make any changes to existing resources.
+  * The *ARM template test toolkit* checks whether your template uses recommended practices. When your template isn't compliant with recommended practices, it returns a list of warnings with the suggested changes. By using the test toolkit, you can learn how to avoid common problems in template development.
 * Blueprint
   * [Blueprint](https://docs.microsoft.com/en-us/azure/governance/blueprints/overview) often consists of a set of resource groups, policies, role assignments, and ARM template deployments. A blueprint is a package to bring each of these artifact types together and allow you to compose and version that package, including through a continuous integration and continuous delivery (CI/CD) pipeline. Ultimately, each is assigned to a subscription in a single operation that can be audited and tracked.
 
@@ -75,6 +77,7 @@
   * WebJobs is not yet supported for App Service on Linux.(As of Aug 2022)
   * Continuous WebJob: keep running, on *all* instances
   * Triggered WebJob: only run when manually triggered or scheduled, on a *single* instance.
+  * Multiple containers support is only available on Linux, not Windows. Use `--deployment-container-image-name` to specify image tag when `az webapp create `.
 * `Azure Container Instances` -> FarGate: provide portable environments for virtualized applications. It can start containers in Azure in seconds, without the need to *provision and manage* VMs.
   * The top-level resource in Azure Container Instances is the [container group](https://docs.microsoft.com/en-us/learn/modules/create-run-container-images-azure-container-instances/2-azure-container-instances-overview). A container group is a collection of containers that get scheduled on the same host machine. The containers in a container group share a lifecycle, resources, local network, and storage volumes. It's similar in concept to a pod in Kubernetes.
   * There are two common ways to deploy a multi-container group: use a Resource Manager template or a YAML file.
@@ -120,6 +123,7 @@
   * Data in the archive access tier is stored offline. The archive tier offers the lowest storage costs but also the highest access costs and latency.
   * The archive tier supports only LRS, GRS, and RA-GRS redundancy options.
   * When you rehydrate a blob, you can set the priority for the rehydration operation via the optional x-ms-rehydrate-priority header on a Set Blob Tier. Standard priority or High Priority.
+  * it takes *1-15 hours* to recover data form the archive tier.
 * Azure Storage redundancy
   * Locally-redundant storage, LRS (replicated in same data center)
   * Zone-redundant storage, ZRS (replicated in different Data center within same AZ)
@@ -288,6 +292,7 @@
 * When integrating with Azure Queue Storage
   * use [maxDequeueCount](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue?tabs=in-process%2Cextensionv5%2Cextensionv3&pivots=programming-language-csharp#host-json) to define the number of times to try processing a message before moving it to the poison queue. Default is 5.
   * default batch size is 16, max is 32.
+  * Regardless of the function app timeout setting, *230 seconds* is the maximum amount of time that an *HTTP triggered* function can take to respond to a request. This is because of the *default idle timeout of Azure Load Balancer*. For longer processing times, consider using the Durable Functions async pattern or defer the actual work and return an immediate response.
 * [Azure Functions custom handlers](https://learn.microsoft.com/en-us/azure/azure-functions/functions-custom-handlers) are lightweight web servers that receive events from Functions host. Any language that supports HTTP primitives can implement a custom handler.
 
 ## Data
