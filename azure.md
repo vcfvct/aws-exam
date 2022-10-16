@@ -138,12 +138,8 @@
   * File Storage use case: Hybrid, Lift and Shift.
 * You can use Power BI to analyze and visualize data stored in `Azure Data Lake` and `Azure SQL Data Warehouse`.
 * `Azure containers` are the backbone of the *virtual disks* platform for Azure IaaS. Both Azure OS and data disks are implemented as virtual disks where data is durably persisted in the Azure Storage platform and then delivered to the *virtual machines* for maximum performance. Azure Disks are persisted in Hyper-V VHD format and stored as a page blob in Azure Storage.
-* Azure Cache for Redis, Microsoft recommends always use Standard or Premium Tier for production systems. The Basic Tier is a single node system with no data replication and no SLA.
-  * The Premium tier allows you to persist data in two ways to provide disaster recovery:
-    1. RDB persistence takes a periodic snapshot and can rebuild the cache using the snapshot in case of failure.
-    2. AOF persistence saves every write operation to a log that is saved at least once per second. This creates bigger files than RDB but has less data loss.[]
-  * The Premium tier also deployment to a virtual network.
 * You can copy blobs, directories, and containers between storage accounts by using the *AzCopy* command-line utility. `AZCopy` should theoretically offer better performance over `az storage blob xxx` or `Start-AzureStorageBlobCopy` as it is designed for optimal performance and operating a *bulk* mode.
+* As datasets get larger, finding a specific object in a sea of data can be difficult. [Blob index tags](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-manage-find-blobs?tabs=azure-portal) provide data management and discovery capabilities by using key- value index tag attributes. You can categorize and find objects within a single container or across all containers in your storage account. As data requirements change, objects can be dynamically categorized by updating their index tags
 
 ## Databases
 * CosmosDB: Global from start, single digit latency, pay for use. 
@@ -172,10 +168,21 @@
     * *Consistent Prefix* model is similar to bounded staleness except, the operational or time lag guarantee. The replicas guarantee the consistency and order of the writes however the data is not always current. This model ensures that the user never sees an out-of-order write. For example, if data is written in the order A, B, and C, the user may either see A, A,B or A,B,C, but never out-of-order entry like A,C or B,A,C. This model provides high availability and very low latency which is best for certain applications that can afford the lag and still function as expected.
     * *Eventual consistency* is the weakest consistency level of all. The first thing to consider in this model is that there is no guarantee on the order of the data and also no guarantee of how long the data can take to replicate. As the name suggests, the reads are consistent, but eventually.
   * .NET client order: `CosmosClient -> Database -> Container -> Item`.
+  * Built-in [RBAC roles for common management scenarios](https://docs.microsoft.com/en-us/azure/cosmos-db/role-based-access-control):
+     1. DocumentDB Account Contributor:	Can manage Azure Cosmos DB accounts.
+     2. Cosmos DB Account Reader:	Can read Azure Cosmos DB account data.
+     3. CosmosBackupOperator:	Can submit a restore request in the Azure portal for a periodic backup enabled database or a container. Can modify the backup interval and retention in the Azure portal. Cannot access any data or use Data Explorer.
+     4. CosmosRestoreOperator:	Can perform a restore action for an Azure Cosmos DB account with continuous backup mode.
+     5. Cosmos DB Operator:	Can provision Azure Cosmos DB accounts, databases, and containers. Cannot access any data or use Data Explorer.
 
 * Azure SQL: managed SQL-Server, up to 100TB.
 * Managed MySQL/PostgreSQL and DMS
 * Azure Table storage: Every entity stored in a table must have a unique combination of *PartitionKey* and *RowKey*. The Table service does not create any secondary indexes, so PartitionKey and RowKey are the only indexed properties.
+* Azure Cache for Redis, Microsoft recommends always use Standard or Premium Tier for production systems. The Basic Tier is a single node system with no data replication and no SLA.
+  * The Premium tier allows you to persist data in two ways to provide disaster recovery:
+    1. RDB persistence takes a periodic snapshot and can rebuild the cache using the snapshot in case of failure.
+    2. AOF persistence saves every write operation to a log that is saved at least once per second. This creates bigger files than RDB but has less data loss.[]
+  * The Premium tier also deployment to a virtual network.
 
 ## Messaging
 * Azure Event Hubs(~=AWS Managed Streaming for Kafka / MSK) is a big data streaming platform and event ingestion service. It can receive and process millions of events per second. Data sent to an event hub can be transformed and stored by using any real-time analytics provider or batching/storage adapters.
