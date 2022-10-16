@@ -256,6 +256,7 @@
   * ps command: `Get-AzKeyVaultSecret -VaultName "keyvaultName"`
   * Azure Key Vault has two service tiers: Standard, which encrypts with a software key, and a Premium tier, which includes hardware security module(HSM)-protected keys.
   * A Key Vault *access policy* determines whether a given security principal, namely a user, application or user group, can perform different operations on Key Vault secrets, keys, and certificates.
+  * [Bring your own key](https://learn.microsoft.com/en-us/azure/key-vault/keys/byok-specification#user-steps):  use Key Exchange Key(KEK) which is a HSM backed RSK key pair generated in AKV, retrieve the public key of KEK, import KEK public key into target HSM and export the Target Key protected by the KEK, import the protected Target Key to the AKV.
 * Azure Information protection -> protect files like word/excel etc while sharing as email attachments etc.
 * Azure sentinel, collect/aggregate/analyze security issues automatically.
 * Defender for Identity(formerly Advanced Threat Protection) -> manage/monitor user behaviors in organization, and reporting.
