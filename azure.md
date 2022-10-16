@@ -132,9 +132,10 @@
   * Geo-redundant storage (GRS): primary region with LRS
   * Geo-zone-redundant storage (GZRS): primary region with ZRS
   * For *read* access to the secondary region, configure your storage account to use read-access geo-redundant storage (RA-GRS) or read-access geo-zone-redundant storage (RA-GZRS). 
-* Blob Storage life-cycle police: transition your data to the appropriate access tiers or expire at the end of the data's lifecycle.
+* Blob Storage [life-cycle police](https://learn.microsoft.com/en-us/azure/storage/blobs/lifecycle-management-overview#archive-data-after-ingest): transition your data to the appropriate access tiers or expire at the end of the data's lifecycle.
   * a collection of rules in JSON format, we can use type/prefix in *filter* sections and define *actions* to do things like `tierToCool/enableAutoTierToHotFromCool/tierToArchive/delete` etc with *conditions* like `daysAfterModificationGreaterThan/daysAfterCreationGreaterThan`. 
   * can be updated via cli/ui/REST. In portal, it is under Storage Account -> Data Management -> Lifecycle Management.
+  * the `version` element defines actions on previous versions.
 * Azure Files -> AWS EFS, storage/sharing with NFS(Network File System) protocol.
   * File Storage use case: Hybrid, Lift and Shift.
 * You can use Power BI to analyze and visualize data stored in `Azure Data Lake` and `Azure SQL Data Warehouse`.
@@ -175,6 +176,11 @@
      3. CosmosBackupOperator:	Can submit a restore request in the Azure portal for a periodic backup enabled database or a container. Can modify the backup interval and retention in the Azure portal. Cannot access any data or use Data Explorer.
      4. CosmosRestoreOperator:	Can perform a restore action for an Azure Cosmos DB account with continuous backup mode.
      5. Cosmos DB Operator:	Can provision Azure Cosmos DB accounts, databases, and containers. Cannot access any data or use Data Explorer.
+  * The [change feed processor](https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/change-feed-processor?tabs=dotnet) is part of the Azure Cosmos DB .NET V3 and Java V4 SDKs. There are four main components of implementing the change feed processor:
+    1. The monitored container: The monitored container has the data from which the change feed is generated. Any inserts and updates to the monitored container are reflected in the change feed of the container.
+    2. The lease container: The lease container acts as a state storage and coordinates processing the change feed across multiple workers. The lease container can be stored in the same account as the monitored container or in a separate account.
+    3. The compute instance: A compute instance hosts the change feed processor to listen for changes. Depending on the platform, it could be represented by a VM, a kubernetes pod, an Azure App Service instance, an actual physical machine. It has a unique identifier referenced as the instance name throughout this article.
+    4. The delegate: The delegate is the code that defines what you, the developer, want to do with each batch of changes that the change feed processor reads.
 
 * Azure SQL: managed SQL-Server, up to 100TB.
 * Managed MySQL/PostgreSQL and DMS
