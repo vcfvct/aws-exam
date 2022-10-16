@@ -105,6 +105,7 @@
 * Storage Account: Unique Azure namespace(Every Object in Azure has its own web address). The base of all Azure storage types.
 * `Storage Account` can have multiple `Containers` which in term contains multiple `Objects`. 
   * The public url can be `https://{StorageAccountName}.blob.core.windows.net/{ContainerName}/{fileName}`.
+  * When you create a storage account, Azure generates two 512-bit *storage account access keys* for that account. These keys can be used to authorize access to data in your storage account via Shared Key authorization. Your storage account access keys are similar to a root password for your storage account. Always be careful to protect your access keys. 
 * Blob Types: Block(up to 4.7TB, for uploading large file), Append(Logging), Page(up to 8TB, virtual Hard Drive)
   * pricing: Hot/Cool/Archive
   * The `Cool Access` is for Short-term backup and disaster recovery. Archive Access is for long term backup.
