@@ -76,11 +76,11 @@
     * Once the `Custom Script Extension` has been added to a VM, it needs to then be removed before another instance can be run. This is not a difficult operation but when running multiple scripts against a VM is less than desirable. `Run Command` is an alternative and more lightweight method for running scripts against Azure VMs. Multiple instances can be run without the need of any type of clean-up action.
   * use [Azure Hybrid runbook worker](https://docs.microsoft.com/en-us/azure/automation/automation-hybrid-runbook-worker) in Azure Automation for installing services via Azure Powershell scripts stored at Azure Storage.
     * Runbooks in Azure Automation can run on either an Azure sandbox or a Hybrid Runbook Worker.
+  * Multiple containers support is only available on Linux, not Windows. Use `--deployment-container-image-name` to specify image tag when `az webapp create `.
 * [WebJobs](https://docs.microsoft.com/en-us/azure/app-service/webjobs-create) is a feature of Azure `App Service` that enables you to run a program or script in the same instance as a web app, API app, or mobile app. There is no additional cost to use WebJobs
   * WebJobs is not yet supported for App Service on Linux.(As of Aug 2022)
   * Continuous WebJob: keep running, on *all* instances
   * Triggered WebJob: only run when manually triggered or scheduled, on a *single* instance.
-  * Multiple containers support is only available on Linux, not Windows. Use `--deployment-container-image-name` to specify image tag when `az webapp create `.
 * `Azure Container Instances` -> FarGate: provide portable environments for virtualized applications. It can start containers in Azure in seconds, without the need to *provision and manage* VMs.
   * The top-level resource in Azure Container Instances is the [container group](https://docs.microsoft.com/en-us/learn/modules/create-run-container-images-azure-container-instances/2-azure-container-instances-overview). A container group is a collection of containers that get scheduled on the same host machine. The containers in a container group share a lifecycle, resources, local network, and storage volumes. It's similar in concept to a pod in Kubernetes.
   * There are two common ways to deploy a multi-container group: use a Resource Manager template or a YAML file.
@@ -316,7 +316,7 @@
 * When integrating with Azure Queue Storage
   * use [maxDequeueCount](https://learn.microsoft.com/en-us/azure/azure-functions/functions-bindings-storage-queue?tabs=in-process%2Cextensionv5%2Cextensionv3&pivots=programming-language-csharp#host-json) to define the number of times to try processing a message before moving it to the poison queue. Default is 5.
   * default batch size is 16, max is 32.
-  * Regardless of the function app timeout setting, *230 seconds* is the maximum amount of time that an *HTTP triggered* function can take to respond to a request. This is because of the *default idle timeout of Azure Load Balancer*. For longer processing times, consider using the Durable Functions async pattern or defer the actual work and return an immediate response.
+* Regardless of the function app timeout setting, *230 seconds* is the maximum amount of time that an *HTTP triggered* function can take to respond to a request. This is because of the *default idle timeout of Azure Load Balancer*. For longer processing times, consider using the Durable Functions async pattern or defer the actual work and return an immediate response.
 * [Azure Functions custom handlers](https://learn.microsoft.com/en-us/azure/azure-functions/functions-custom-handlers) are lightweight web servers that receive events from Functions host. Any language that supports HTTP primitives can implement a custom handler.
 
 ## Data
