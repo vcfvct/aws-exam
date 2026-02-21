@@ -17,6 +17,10 @@
 ## azure ai document intelligence
 
 - file size limit: s0 -> 500MB, 200 pages. resolution: 50*50 - 10K*10K.
+- azure ai document intelligence
+  - file size limit: s0 -> 500MB, 200 pages.
+  - The Azure Document Intelligence `Layout Model` is an advanced machine-learning-based API designed to analyze and extract structured data from various document formats. It combines Optical Character Recognition (OCR) with deep learning to extract text, tables, selection marks, and document structures, enabling better semantic understanding of documents. API: `prebuilt-layout`.
+  - The `OCM-Apim-Subscription-Key` is a key used to authorize requests to a specific API endpoint in Azure Document Intelligence. This key is placed in the HTTP header of the request and is used to record the transaction for billing purposes.
 - Azure AI video indexer
   - [file size: 2GB, length: 6 hours](https://learn.microsoft.com/en-us/azure/azure-video-indexer/avi-support-matrix).
 
@@ -24,7 +28,7 @@
 
 - fine tune data: `jsonl` format
 
-- Azure AI language service, custom qusetion answering -> [import file type](https://learn.microsoft.com/en-us/azure/ai-services/language-service/question-answering/reference/document-format-guidelines): `.tsv, .xls, .txt`.
+- Azure AI language service, custom qusetion answering -> [import file type](https://learn.microsoft.com/en-us/azure/ai-services/language-service/question-answering/reference/document-format-guidelines): `.tsv, .xls, .txt, .pdf`.
 - `Azure AI Language` provides powerful tools for natural language processing (NLP) tasks such as text analysis, conversational AI, and document processing. Python developers can leverage Azure's SDKs and APIs to integrate these capabilities into their applications. `pip install azure-ai-language-conversations`
 - Enabling a `service endpoint` for Account in VNet allows secure communication over the Azure backbone network, eliminating the need for public internet access.
 
@@ -50,3 +54,9 @@
 - To validate real person in live video, checking for changes in the `HeadPose` attribute over time helps confirm natural movement, indicating a live persence ratherthan a static image. Thsi is a common method for liveness detectin.
 
 - Azure AI's `groundedness detection` supports two primary tasks: Summarization and QnA. Users can select between Reasoning Mode for detailed explanations or Non-Reasoning Mode for faster detection. Additionally, the API includes a correction feature that automatically aligns ungrounded outputs with the provided sources
+- The `imageType` property in the response from services like `Computer Vision` can help identify the general type of image, such as if itis a photograph, drawing or clipart.
+- `IAM authoring resources` involves assigning roles to users, groups, service principals, or managed identities at a specific scope. This process is crucial for managing access to Azure resources and ensuring that only `authorized users` can perform actions on them. To author resources in Azure IAM, you can use the Azure portal, Azure CLI, Azure PowerShell, or ARM templates. The Azure portal is the most common method, where you navigate to the Azure Resource, go to IAM (Identity and Access Management), and then to the Role Assignments tab to add a role assignment. You can also create custom roles and assign permissions to users, groups, or applications
+- face recognition api, up to 248 faces per person.
+
+- Azure `Immersive Reader` is an AI-powered service designed to enhance reading comprehension and accessibility for users of all ages and abilities
+  - reading aloud, translation, highlight and focus, parts of speech analysis, spiit words into syllables, picture dictionary(display picture for common words to help user understand the meaning).
